@@ -13,7 +13,6 @@ public class Entity {
 
     String direction = "";
 
-    int tileSize = 48;
-    int animationX = 0;
-    int animationY = 0;
+    int animationCounter = 0;
+    int animationNum = 1;
 }

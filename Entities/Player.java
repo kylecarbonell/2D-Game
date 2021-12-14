@@ -16,9 +16,11 @@ public class Player extends Entity{
     KeyHandler keyHandler;
 
     //Images
+    BufferedImage defaultImage = null;
+    BufferedImage left1 = null;
+    BufferedImage left2 = null;
     BufferedImage right1 = null;
     BufferedImage right2 = null;
-    BufferedImage left1 = null;
     
     BufferedImage currentImage = null;
 
@@ -38,12 +40,16 @@ public class Player extends Entity{
 
     public void getImage(){
         try{
-            File right1File = new File("Character Sprites\\Player\\right1.png");
+            File defaultFile = new File("Character Sprites\\Player\\default.png");
             File left1File = new File("Character Sprites\\Player\\left1.png");
+            File left2File = new File("Character Sprites\\Player\\left2.png");
+            File right1File = new File("Character Sprites\\Player\\right1.png");
             File right2File = new File("Character Sprites\\Player\\right2.png");
+            defaultImage = ImageIO.read(defaultFile);
+            left1 = ImageIO.read(left1File);
+            left2 = ImageIO.read(left2File);
             right1 = ImageIO.read(right1File);
             right2 = ImageIO.read(right2File);
-            left1 = ImageIO.read(left1File);
         }
         catch(IOException e){
             e.printStackTrace();
@@ -51,43 +57,65 @@ public class Player extends Entity{
     }
 
     public void update(){
-        if(keyHandler.up && playerY >= 0){
-            playerY -= speed;
-        }
-        if(keyHandler.down && playerY <= screenHeight-tileSize){
-            playerY += speed;
-        }
-        if(keyHandler.left && playerX >= 0){
-            playerX -= speed;
-            direction = "left";
-        }
-        if(keyHandler.right && playerX <= screenWidth-tileSize){
-            playerX += speed;
-            if(animationX % 2 == 0){
-                direction = "right1";
+        if(keyHandler.moving){
+            if(keyHandler.up && playerY >= 0){
+                direction = "up";
+                playerY -= speed;
             }
-            else{
-                direction = "right2";
+            if(keyHandler.down && playerY <= screenHeight-gm.tileSize){
+                direction = "down";
+                playerY += speed;
             }
-            System.out.println(direction);
+            if(keyHandler.left && playerX >= 0){
+                direction = "left";
+                playerX -= speed;
+            }
+            if(keyHandler.right && playerX <= screenWidth-gm.tileSize){
+                direction = "right";
+                playerX += speed;
+            }
+    
+            animationCounter++;
+            if(animationCounter > 10){
+                if(animationNum == 1){
+                    animationNum = 2;
+                }
+                else if(animationNum == 2){
+                    animationNum = 1;
+                }
+                animationCounter = 0;
+            }
         }
-
+        else{
+            direction = "default";
+        }
+        
         
     }
     
     public void paint(Graphics2D g){
         switch(direction){
             case "left":
-                currentImage = left1;
+                if(animationNum == 1){
+                    currentImage = left1;
+                }
+                else{
+                    currentImage = left2;
+                }
                 break;
             case "right":
-                currentImage = right1;
+                if(animationNum == 1){
+                    currentImage = right1;
+                }
+                else{
+                    currentImage = right2;
+                }
                 break;
-            default:
-                currentImage = right1;
+            case "default":
+                currentImage = defaultImage;
         }
         g.setColor(Color.white);
-        g.drawImage(currentImage, playerX, playerY, tileSize, tileSize, null);
+        g.drawImage(currentImage, playerX, playerY, gm.tileSize, gm.tileSize, null);
 
         g.dispose();
     }

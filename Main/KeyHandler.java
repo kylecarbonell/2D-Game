@@ -14,6 +14,7 @@ public class KeyHandler implements KeyListener{
     public boolean down;
     public boolean left;
     public boolean right;
+    public boolean moving;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -41,6 +42,7 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_D){
             right = true;
         }
+        moving = true;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_D){
             right = false;
         }
+        moving = false;
     }
 
 }

@@ -3,6 +3,7 @@ package Main;
 import javax.swing.*;
 
 import Entities.Player;
+import Maps.Map;
 
 import java.awt.*;
 
@@ -14,13 +15,17 @@ public class Game extends JPanel implements Runnable{
     JFrame window;
     Thread thread;
 
-    int tileSize = 48;
+    //64
+    public int tileSize = 64;
+    public int rows = screenWidth/tileSize;
+    public int col = screenHeight+1/tileSize;
     
 
     int fps = 60;
     KeyHandler keyHandler = new KeyHandler();
 
     Player player = new Player(this, keyHandler);
+    Map map = new Map(this);
 
     Game(){
         window = new JFrame();
@@ -80,6 +85,7 @@ public class Game extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
+        //map.paint(g2);
         player.paint(g2);
 
         g2.dispose();
