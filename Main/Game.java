@@ -1,6 +1,9 @@
 package Main;
 
 import javax.swing.*;
+
+import Entities.Player;
+
 import java.awt.*;
 
 public class Game extends JPanel implements Runnable{
@@ -12,12 +15,12 @@ public class Game extends JPanel implements Runnable{
     Thread thread;
 
     int tileSize = 48;
-    int playerX = 100;
-    int playerY = 100;
-    int speed = 8;
+    
 
     int fps = 60;
     KeyHandler keyHandler = new KeyHandler();
+
+    Player player = new Player(this, keyHandler);
 
     Game(){
         window = new JFrame();
@@ -29,7 +32,7 @@ public class Game extends JPanel implements Runnable{
         
         this.setBounds(0, 0, screenWidth, screenHeight);
         this.setDoubleBuffered(true);
-        this.setBackground(Color.black);
+        this.setBackground(Color.white);
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         window.add(this);
@@ -65,18 +68,7 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void update(){
-        if(keyHandler.up && playerY >= 0){
-            playerY -= speed;
-        }
-        if(keyHandler.down && playerY <= screenHeight-tileSize){
-            playerY += speed;
-        }
-        if(keyHandler.left && playerX >= 0){
-            playerX -= speed;
-        }
-        if(keyHandler.right && playerX <= screenWidth-tileSize){
-            playerX += speed;
-        }
+        player.update();
     }
 
     
@@ -88,8 +80,8 @@ public class Game extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        g2.setColor(Color.white);
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        player.paint(g2);
+
         g2.dispose();
     }
 
