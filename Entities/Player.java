@@ -24,17 +24,23 @@ public class Player extends Entity{
     
     BufferedImage currentImage = null;
 
+    public final int screenX;
+    public final int screenY;
+
     public Player(Game gm, KeyHandler keyHandler){
         this.gm = gm;
         this.keyHandler = keyHandler;
+
+        screenX = screenWidth / 2;
+        screenY = screenHeight / 2;
 
         setValues();
         getImage();
     }
 
     public void setValues(){
-        playerY = 100;
-        playerX = 100;
+        worldY = gm.tileSize*13;
+        worldX = gm.tileSize*6;
         speed = 4;
     }
 
@@ -58,21 +64,21 @@ public class Player extends Entity{
 
     public void update(){
         if(keyHandler.moving){
-            if(keyHandler.up && playerY >= 0){
+            if(keyHandler.up && worldY >= 0){
                 direction = "up";
-                playerY -= speed;
+                worldY -= speed;
             }
-            if(keyHandler.down && playerY <= screenHeight-gm.tileSize){
+            if(keyHandler.down && worldY <= screenHeight-gm.tileSize){
                 direction = "down";
-                playerY += speed;
+                worldY += speed;
             }
-            if(keyHandler.left && playerX >= 0){
+            if(keyHandler.left && worldX >= 0){
                 direction = "left";
-                playerX -= speed;
+                worldX -= speed;
             }
-            if(keyHandler.right && playerX <= screenWidth-gm.tileSize){
+            if(keyHandler.right && worldX <= screenWidth-gm.tileSize){
                 direction = "right";
-                playerX += speed;
+                worldX += speed;
             }
     
             animationCounter++;
@@ -115,7 +121,7 @@ public class Player extends Entity{
                 currentImage = defaultImage;
         }
         g.setColor(Color.white);
-        g.drawImage(currentImage, playerX, playerY, gm.tileSize, gm.tileSize, null);
+        g.drawImage(currentImage, screenX - gm.tileSize/2, screenY - gm.tileSize/2, gm.tileSize, gm.tileSize, null);
 
         g.dispose();
     }

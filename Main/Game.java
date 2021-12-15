@@ -11,21 +11,29 @@ public class Game extends JPanel implements Runnable{
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     int screenHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    
+    // int screenWidth = 1600;
+    // int screenHeight = 900;
 
     JFrame window;
     Thread thread;
 
     //64
     public int tileSize = 64;
-    public int rows = screenWidth/tileSize;
-    public int col = screenHeight+1/tileSize;
+    public int rows = screenWidth-2/tileSize;
+    public int col = screenHeight+2/tileSize;
+
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
     
 
     int fps = 60;
     KeyHandler keyHandler = new KeyHandler();
 
-    Player player = new Player(this, keyHandler);
+    public Player player = new Player(this, keyHandler);
     Map map = new Map(this);
+
+    int runOnce = 1;
 
     Game(){
         window = new JFrame();
@@ -85,7 +93,7 @@ public class Game extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        //map.paint(g2);
+        map.paint(g2);
         player.paint(g2);
 
         g2.dispose();

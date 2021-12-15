@@ -7,8 +7,8 @@ public class Entity {
     int screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     int screenHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
     
-    int playerX;
-    int playerY;
+    public int worldX;
+    public int worldY;
     int speed;
 
     String direction = "";
