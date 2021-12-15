@@ -29,20 +29,24 @@ public class KeyHandler implements KeyListener{
         int code = e.getKeyCode();
         if(code == KeyEvent.VK_W){
             up = true;
+            moving = true;
         }
 
         if(code == KeyEvent.VK_A){
             left = true;
+            moving = true;
         }
 
         if(code == KeyEvent.VK_S){
             down = true;
+            moving = true;
         }
 
         if(code == KeyEvent.VK_D){
             right = true;
+            moving = true;
         }
-        moving = true;
+        
     }
 
     @Override

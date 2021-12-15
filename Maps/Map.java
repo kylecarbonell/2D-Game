@@ -11,8 +11,8 @@ import java.awt.image.*;
 
 public class Map extends Tile{
     Game gm;
-    BufferedImage[][] layout;
-    Tile[] tiles;
+    public int[][] layout;
+    public Tile[] tiles;
 
     int i = 0;
     int j = 0;
@@ -20,7 +20,7 @@ public class Map extends Tile{
 
     public Map(Game gm){
         this.gm = gm;
-        layout = new BufferedImage[gm.rows][gm.col];
+        layout = new int[gm.rows][gm.col];
         tiles = new Tile[100];
         getImage();
         instantiateMap();
@@ -30,15 +30,30 @@ public class Map extends Tile{
         File grassFile = new File("Character Sprites\\Terrain\\GrassTile.png");
         File sandFile = new File("Character Sprites\\Terrain\\SandTile.png");
         File stoneBrickFile = new File("Character Sprites\\Terrain\\StoneBrickTile.png");
+        File waterFile = new File("Character Sprites\\Terrain\\WaterTile.png");
+        File treeFile = new File("Character Sprites\\Terrain\\TreeTile.png");
+
         try {
             tiles[0] = new Tile();
             tiles[0].image = ImageIO.read(grassFile);
+            tiles[0].collision = true;
 
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(sandFile);
+            tiles[1].collision = false;
 
             tiles[2] = new Tile();
             tiles[2].image = ImageIO.read(stoneBrickFile);
+            tiles[2].collision = true;
+
+            tiles[3] = new Tile();
+            tiles[3].image = ImageIO.read(waterFile);
+            tiles[3].collision = true;
+
+            tiles[4] = new Tile();
+            tiles[4].image = ImageIO.read(treeFile);
+            tiles[4].collision = true;
+
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -55,10 +70,10 @@ public class Map extends Tile{
                 Scanner lineScan = new Scanner(line);
 
                 while(lineScan.hasNext()){
-                    layout[i][j] = tiles[Integer.valueOf(lineScan.next())].image;
+                    layout[i][j] = Integer.valueOf(lineScan.next());
                     i++;
                 }
-                i=0;
+                i = 0;
                 j++;
                 lineScan.close();
             }
@@ -83,7 +98,7 @@ public class Map extends Tile{
                     worldY + gm.tileSize> gm.player.worldY - gm.player.screenY &&
                     worldY - gm.tileSize < gm.player.worldY + gm.player.screenY){
 
-                    g.drawImage(layout[i][j], screenX, screenY, gm.tileSize, gm.tileSize, null);
+                    g.drawImage(tiles[layout[i][j]].image, screenX, screenY, gm.tileSize, gm.tileSize, null);
                 }
             }
         }

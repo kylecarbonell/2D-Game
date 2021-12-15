@@ -4,7 +4,6 @@ import Main.Game;
 import Main.KeyHandler;
 
 import java.awt.*;
-import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,15 +13,6 @@ public class Player extends Entity{
 
     Game gm;
     KeyHandler keyHandler;
-
-    //Images
-    BufferedImage defaultImage = null;
-    BufferedImage left1 = null;
-    BufferedImage left2 = null;
-    BufferedImage right1 = null;
-    BufferedImage right2 = null;
-    
-    BufferedImage currentImage = null;
 
     public final int screenX;
     public final int screenY;
@@ -34,13 +24,17 @@ public class Player extends Entity{
         screenX = screenWidth / 2;
         screenY = screenHeight / 2;
 
+        solidArea = new Rectangle(6, 11, 5, 6);
+        
+
         setValues();
         getImage();
     }
 
     public void setValues(){
-        worldY = gm.tileSize*13;
-        worldX = gm.tileSize*6;
+        //Spawn
+        worldX = gm.tileSize*23; 
+        worldY = gm.tileSize*28;
         speed = 4;
     }
 
@@ -51,11 +45,16 @@ public class Player extends Entity{
             File left2File = new File("Character Sprites\\Player\\left2.png");
             File right1File = new File("Character Sprites\\Player\\right1.png");
             File right2File = new File("Character Sprites\\Player\\right2.png");
+            File up1File = new File("Character Sprites\\Player\\up1.png");
+            File up2File = new File("Character Sprites\\Player\\up2.png");
+
             defaultImage = ImageIO.read(defaultFile);
             left1 = ImageIO.read(left1File);
             left2 = ImageIO.read(left2File);
             right1 = ImageIO.read(right1File);
             right2 = ImageIO.read(right2File);
+            up1 = ImageIO.read(up1File);
+            up2 = ImageIO.read(up2File);
         }
         catch(IOException e){
             e.printStackTrace();
@@ -63,24 +62,42 @@ public class Player extends Entity{
     }
 
     public void update(){
-        if(keyHandler.moving){
+        if(keyHandler.up || keyHandler.down || keyHandler.left || keyHandler.right){
             if(keyHandler.up && worldY >= 0){
                 direction = "up";
-                worldY -= speed;
             }
-            if(keyHandler.down && worldY <= screenHeight-gm.tileSize){
+            if(keyHandler.down && worldY <= gm.maxWorldCol*gm.tileSize - gm.tileSize){
                 direction = "down";
-                worldY += speed;
             }
             if(keyHandler.left && worldX >= 0){
                 direction = "left";
-                worldX -= speed;
             }
-            if(keyHandler.right && worldX <= screenWidth-gm.tileSize){
+            if(keyHandler.right && worldX <= gm.maxWorldRow*gm.tileSize - gm.tileSize){
                 direction = "right";
-                worldX += speed;
             }
-    
+
+            collisionOn = false;
+            gm.collision.colCheck(this);
+
+            if(!collisionOn){
+                switch(direction){
+                    case "left":
+                        worldX -= speed;
+                        break;
+                    case "right":
+                        worldX += speed;
+                        break;
+                    case "up":
+                        worldY -= speed;
+                        break;
+                    case "down":
+                        worldY += speed;
+                        break;
+                    case "default":
+                        currentImage = defaultImage;
+                }
+            }
+            
             animationCounter++;
             if(animationCounter > 10){
                 if(animationNum == 1){
@@ -117,6 +134,14 @@ public class Player extends Entity{
                     currentImage = right2;
                 }
                 break;
+            case "up":
+                if(animationNum == 1){
+                    currentImage = up1;
+                    System.out.println("balls");
+                }
+                else{
+                    currentImage = up2;
+                }
             case "default":
                 currentImage = defaultImage;
         }

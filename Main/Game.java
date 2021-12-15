@@ -28,10 +28,11 @@ public class Game extends JPanel implements Runnable{
     
 
     int fps = 60;
-    KeyHandler keyHandler = new KeyHandler();
 
+    KeyHandler keyHandler = new KeyHandler();
     public Player player = new Player(this, keyHandler);
-    Map map = new Map(this);
+    public Map map = new Map(this);
+    public Collision collision = new Collision(this);
 
     int runOnce = 1;
 
