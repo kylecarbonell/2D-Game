@@ -12,7 +12,7 @@ public class Entity {
     public int worldY;
     public int speed;
 
-    public String direction = "";
+    public String direction;
 
     int animationCounter = 0;
     int animationNum = 1;

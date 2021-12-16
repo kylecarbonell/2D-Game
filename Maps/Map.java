@@ -17,7 +17,6 @@ public class Map extends Tile{
     int i = 0;
     int j = 0;
 
-
     public Map(Game gm){
         this.gm = gm;
         layout = new int[gm.rows][gm.col];
@@ -45,15 +44,20 @@ public class Map extends Tile{
             tiles[2] = new Tile();
             tiles[2].image = ImageIO.read(stoneBrickFile);
             tiles[2].collision = true;
+            tiles[2].interactable = true;
+            tiles[2].code = "Stone";
 
             tiles[3] = new Tile();
             tiles[3].image = ImageIO.read(waterFile);
             tiles[3].collision = true;
+            tiles[3].interactable = true;
+            tiles[3].code = "Water";
 
             tiles[4] = new Tile();
             tiles[4].image = ImageIO.read(treeFile);
             tiles[4].collision = true;
-
+            tiles[4].interactable = true;
+            tiles[4].code = "Tree";
 
         } catch (IOException e) {
             // TODO Auto-generated catch block

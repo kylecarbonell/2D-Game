@@ -30,7 +30,15 @@ public class Collision {
                 topRow = (entityTop - entity.speed)/gm.tileSize;
                 tile1 = gm.map.layout[leftCol][topRow];
                 tile2 = gm.map.layout[rightCol][topRow];
+                //Check if Collision for that Block is on
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                    //Check if the tile has a code
+                    if(gm.map.tiles[tile1].interactable){
+                        gm.action.code = gm.map.tiles[tile1].code;
+                    }
+                    else if(gm.map.tiles[tile2].interactable){
+                        gm.action.code = gm.map.tiles[tile2].code;
+                    }
                     entity.collisionOn = true;
                 }
                 break;
@@ -39,6 +47,12 @@ public class Collision {
                 tile1 = gm.map.layout[leftCol][botRow];
                 tile2 = gm.map.layout[rightCol][botRow];
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                    if(gm.map.tiles[tile1].code != null){
+                        gm.action.code = gm.map.tiles[tile1].code;
+                    }
+                    else if(gm.map.tiles[tile2].code != null){
+                        gm.action.code = gm.map.tiles[tile2].code;
+                    }
                     entity.collisionOn = true;
                 }
                 break;
@@ -47,6 +61,12 @@ public class Collision {
                 tile1 = gm.map.layout[leftCol][topRow];
                 tile2 = gm.map.layout[leftCol][botRow];
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                    if(gm.map.tiles[tile1].code != null){
+                        gm.action.code = gm.map.tiles[tile1].code;
+                    }
+                    else if(gm.map.tiles[tile2].code != null){
+                        gm.action.code = gm.map.tiles[tile2].code;
+                    }
                     entity.collisionOn = true;
                 }
                 break;
@@ -55,6 +75,12 @@ public class Collision {
                 tile1 = gm.map.layout[rightCol][topRow];
                 tile2 = gm.map.layout[rightCol][botRow];
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                    if(gm.map.tiles[tile1].code != null){
+                        gm.action.code = gm.map.tiles[tile1].code;
+                    }
+                    else if(gm.map.tiles[tile2].code != null){
+                        gm.action.code = gm.map.tiles[tile2].code;
+                    }
                     entity.collisionOn = true;
                 }
                 break;

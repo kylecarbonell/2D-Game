@@ -33,6 +33,7 @@ public class Game extends JPanel implements Runnable{
     public Player player = new Player(this, keyHandler);
     public Map map = new Map(this);
     public Collision collision = new Collision(this);
+    ActionHandler action = new ActionHandler(this);
 
     int runOnce = 1;
 

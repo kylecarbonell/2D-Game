@@ -24,7 +24,7 @@ public class Player extends Entity{
         screenX = screenWidth / 2;
         screenY = screenHeight / 2;
 
-        solidArea = new Rectangle(6, 11, 5, 6);
+        solidArea = new Rectangle(6, 11, 5, 3);
         
 
         setValues();
@@ -63,42 +63,31 @@ public class Player extends Entity{
 
     public void update(){
         if(keyHandler.up || keyHandler.down || keyHandler.left || keyHandler.right){
-            if(keyHandler.up && worldY >= 0){
-                direction = "up";
-            }
-            if(keyHandler.down && worldY <= gm.maxWorldCol*gm.tileSize - gm.tileSize){
-                direction = "down";
-            }
-            if(keyHandler.left && worldX >= 0){
-                direction = "left";
-            }
-            if(keyHandler.right && worldX <= gm.maxWorldRow*gm.tileSize - gm.tileSize){
-                direction = "right";
-            }
 
             collisionOn = false;
             gm.collision.colCheck(this);
 
             if(!collisionOn){
-                switch(direction){
-                    case "left":
-                        worldX -= speed;
-                        break;
-                    case "right":
-                        worldX += speed;
-                        break;
-                    case "up":
-                        worldY -= speed;
-                        break;
-                    case "down":
-                        worldY += speed;
-                        break;
-                    case "default":
-                        currentImage = defaultImage;
+                if(keyHandler.up && worldY >= 0){
+                    direction = "up";
+                    worldY -= speed;
+                }
+                if(keyHandler.down && worldY <= gm.maxWorldCol*gm.tileSize - gm.tileSize){
+                    direction = "down";
+                    worldY += speed;
+                }
+                if(keyHandler.left && worldX >= 0){
+                    direction = "left";
+                    worldX -= speed;
+                }
+                if(keyHandler.right && worldX <= gm.maxWorldRow*gm.tileSize - gm.tileSize){
+                    direction = "right";
+                    worldX += speed;
                 }
             }
             
             animationCounter++;
+
             if(animationCounter > 10){
                 if(animationNum == 1){
                     animationNum = 2;
@@ -137,11 +126,11 @@ public class Player extends Entity{
             case "up":
                 if(animationNum == 1){
                     currentImage = up1;
-                    System.out.println("balls");
                 }
                 else{
                     currentImage = up2;
                 }
+                break;
             case "default":
                 currentImage = defaultImage;
         }
