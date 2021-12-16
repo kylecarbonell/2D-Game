@@ -10,7 +10,7 @@ public class Collision {
         this.gm = gm;
     }
 
-    public void colCheck(Entity entity){
+    public void checkCollision(Entity entity){
 
         int entityTop = entity.worldY + entity.solidArea.y;
         int entityBottom = entity.worldY + entity.solidArea.y + entity.solidArea.height;
@@ -32,13 +32,6 @@ public class Collision {
                 tile2 = gm.map.layout[rightCol][topRow];
                 //Check if Collision for that Block is on
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
-                    //Check if the tile has a code
-                    if(gm.map.tiles[tile1].interactable){
-                        gm.action.code = gm.map.tiles[tile1].code;
-                    }
-                    else if(gm.map.tiles[tile2].interactable){
-                        gm.action.code = gm.map.tiles[tile2].code;
-                    }
                     entity.collisionOn = true;
                 }
                 break;
@@ -47,12 +40,6 @@ public class Collision {
                 tile1 = gm.map.layout[leftCol][botRow];
                 tile2 = gm.map.layout[rightCol][botRow];
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
-                    if(gm.map.tiles[tile1].code != null){
-                        gm.action.code = gm.map.tiles[tile1].code;
-                    }
-                    else if(gm.map.tiles[tile2].code != null){
-                        gm.action.code = gm.map.tiles[tile2].code;
-                    }
                     entity.collisionOn = true;
                 }
                 break;
@@ -61,12 +48,6 @@ public class Collision {
                 tile1 = gm.map.layout[leftCol][topRow];
                 tile2 = gm.map.layout[leftCol][botRow];
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
-                    if(gm.map.tiles[tile1].code != null){
-                        gm.action.code = gm.map.tiles[tile1].code;
-                    }
-                    else if(gm.map.tiles[tile2].code != null){
-                        gm.action.code = gm.map.tiles[tile2].code;
-                    }
                     entity.collisionOn = true;
                 }
                 break;
@@ -75,15 +56,82 @@ public class Collision {
                 tile1 = gm.map.layout[rightCol][topRow];
                 tile2 = gm.map.layout[rightCol][botRow];
                 if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
-                    if(gm.map.tiles[tile1].code != null){
-                        gm.action.code = gm.map.tiles[tile1].code;
-                    }
-                    else if(gm.map.tiles[tile2].code != null){
-                        gm.action.code = gm.map.tiles[tile2].code;
-                    }
                     entity.collisionOn = true;
                 }
                 break;
         }
+    }
+
+    public int checkObject(Entity entity, boolean player){
+        int index = 999;
+        for(int i = 0; i < gm.obj.length; i++){
+
+            if(gm.obj[i] != null){
+
+                entity.solidArea.x = entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = entity.worldY + entity.solidArea.y;
+
+                gm.obj[i].hitBox.x = gm.obj[i].worldX + gm.obj[i].hitBox.x;
+                gm.obj[i].hitBox.y = gm.obj[i].worldY + gm.obj[i].hitBox.y;
+
+                switch(entity.direction){
+                    case "up":
+                        entity.solidArea.y -= entity.speed;
+                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                            if(gm.obj[i].collision){
+                                entity.collisionOn = true;
+                                System.out.println("Here");
+                            }
+                            if(player){
+                                index = i;
+                            }
+                            System.out.println("here");
+                        }
+                        break;  
+                    case "down":
+                        entity.solidArea.y += entity.speed;
+                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                            if(gm.obj[i].collision){
+                                entity.collisionOn = true;
+                            }
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "left":
+                        entity.solidArea.x -= entity.speed;
+                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                            if(gm.obj[i].collision){
+                                entity.collisionOn = true;
+                            }
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "right":
+                        entity.solidArea.x += entity.speed;
+                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                            if(gm.obj[i].collision){
+                                entity.collisionOn = true;
+                            }
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                }
+                //collisionOn = false;
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.x = entity.solidAreaDefaultY;
+
+                gm.obj[i].hitBox.x = gm.obj[i].defaultX;
+                gm.obj[i].hitBox.y = gm.obj[i].defaultY;
+                
+            }
+        }
+
+        return index;
     }
 }

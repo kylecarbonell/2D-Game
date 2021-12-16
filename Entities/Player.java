@@ -25,6 +25,9 @@ public class Player extends Entity{
         screenY = screenHeight / 2;
 
         solidArea = new Rectangle(6, 11, 5, 3);
+
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         
 
         setValues();
@@ -65,7 +68,9 @@ public class Player extends Entity{
         if(keyHandler.up || keyHandler.down || keyHandler.left || keyHandler.right){
 
             collisionOn = false;
-            gm.collision.colCheck(this);
+            gm.collision.checkCollision(this);
+            //int index = gm.collision.checkObject(this, true);
+            
 
             if(!collisionOn){
                 if(keyHandler.up && worldY >= 0){
@@ -85,6 +90,8 @@ public class Player extends Entity{
                     worldX += speed;
                 }
             }
+
+            
             
             animationCounter++;
 

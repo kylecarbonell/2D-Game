@@ -3,6 +3,8 @@ package Main;
 import javax.swing.*;
 
 import Entities.Player;
+import Items.Items;
+import Items.SetItems;
 import Maps.Map;
 
 import java.awt.*;
@@ -18,7 +20,7 @@ public class Game extends JPanel implements Runnable{
     JFrame window;
     Thread thread;
 
-    //64
+    //Sizes and measurements
     public int tileSize = 64;
     public int rows = screenWidth-2/tileSize;
     public int col = screenHeight+2/tileSize;
@@ -29,13 +31,13 @@ public class Game extends JPanel implements Runnable{
 
     int fps = 60;
 
+    //System classes
     KeyHandler keyHandler = new KeyHandler();
     public Player player = new Player(this, keyHandler);
     public Map map = new Map(this);
     public Collision collision = new Collision(this);
-    ActionHandler action = new ActionHandler(this);
-
-    int runOnce = 1;
+    public Items obj[] = new Items[10]; 
+    SetItems set = new SetItems(this);
 
     Game(){
         window = new JFrame();
@@ -52,11 +54,17 @@ public class Game extends JPanel implements Runnable{
         this.setFocusable(true);
         window.add(this);
         start();
+        setUp();
     }
 
     public void start(){
         thread = new Thread(this);
         thread.start();
+    }
+
+    public void setUp(){
+        set.instantiate();
+
     }
 
     @Override
@@ -95,7 +103,16 @@ public class Game extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
+        //Paint map
         map.paint(g2);
+
+        //Paint world objects
+        for(int i = 0; i < obj.length; i++){
+            if(obj[i] != null){
+                obj[i].paint(g2);
+            }
+        }
+        //Paint main 
         player.paint(g2);
 
         g2.dispose();
