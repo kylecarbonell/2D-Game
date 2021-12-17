@@ -71,7 +71,7 @@ public class Game extends JPanel implements Runnable{
 
     public void setUp(){
         set.instantiate();
-        gamestate = 1;
+        gamestate = 3;
     }
 
     @Override
@@ -104,6 +104,10 @@ public class Game extends JPanel implements Runnable{
         if(gamestate == pauseState){
 
         }
+        if(gamestate == forestState){
+            player.update();
+        }
+
     }
 
     
@@ -120,7 +124,7 @@ public class Game extends JPanel implements Runnable{
         }
         else{
             //TownMap
-            map.paint(g2);
+            map.paint(g2, 3);
 
             //Paint world objects
             for(int i = 0; i < obj.length; i++){

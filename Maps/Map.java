@@ -7,12 +7,15 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import Main.Game;
-import java.awt.image.*;
 
 public class Map extends Tile{
     Game gm;
+    public File[] mapFiles = new File[2];
     public int[][] layout;
+    public int[][] townLayout;
+    public int[][] forestLayout;
     public Tile[] tiles;
+    File file;
 
     int i = 0;
     int j = 0;
@@ -20,6 +23,8 @@ public class Map extends Tile{
     public Map(Game gm){
         this.gm = gm;
         layout = new int[gm.rows][gm.col];
+        townLayout= new int[gm.rows][gm.col];
+        forestLayout = new int[gm.rows][gm.col];
         tiles = new Tile[100];
         getImage();
         instantiateMap();
@@ -59,6 +64,9 @@ public class Map extends Tile{
             tiles[4].interactable = true;
             tiles[4].code = "Tree";
 
+            mapFiles[0] = new File("Maps\\Map.txt");
+            mapFiles[1] = new File("Maps\\Forest.txt");
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -69,27 +77,43 @@ public class Map extends Tile{
     public void instantiateMap(){
         //Create and instantiate 2 different maps
         try {
-            Scanner scan = new Scanner(new File("Maps\\Map.txt"));
-            while(scan.hasNextLine()){
-                String line = scan.nextLine();
-                Scanner lineScan = new Scanner(line);
-
-                while(lineScan.hasNext()){
-                    layout[i][j] = Integer.valueOf(lineScan.next());
-                    i++;
+            for(File file : mapFiles){
+                if(file == mapFiles[0]){
+                    townLayout = layout;
                 }
-                i = 0;
-                j++;
-                lineScan.close();
+                else if(file == mapFiles[1]){
+                    forestLayout = layout;
+                }
+                Scanner scan = new Scanner(file);
+                while(scan.hasNextLine()){
+                    String line = scan.nextLine();
+                    Scanner lineScan = new Scanner(line);
+    
+                    while(lineScan.hasNext()){
+                        layout[i][j] = Integer.valueOf(lineScan.next());
+                        i++;
+                    }
+                    i = 0;
+                    j++;
+                    lineScan.close();
+                }
+                scan.close();
             }
-            scan.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public void paint(Graphics2D g){
+    public void paint(Graphics2D g, int state){
+        int[][] temp = townLayout;
+        if(state == gm.forestState){
+            temp = forestLayout;
+        }
+        if(state == gm.playState){
+            temp = townLayout;
+        }
+
         for(int i = 0; i < gm.maxWorldRow; i++){
             for(int j = 0; j < gm.maxWorldCol; j++){
 
@@ -103,7 +127,7 @@ public class Map extends Tile{
                     worldY + gm.tileSize> gm.player.worldY - gm.player.screenY &&
                     worldY - gm.tileSize < gm.player.worldY + gm.player.screenY){
 
-                    g.drawImage(tiles[layout[i][j]].image, screenX, screenY, gm.tileSize, gm.tileSize, null);
+                    g.drawImage(tiles[temp[i][j]].image, screenX, screenY, gm.tileSize, gm.tileSize, null);
                 }
             }
         }
