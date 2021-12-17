@@ -1,13 +1,18 @@
 package Main;
 
 import Entities.Entity;
+import java.awt.*;
 
 public class Collision {
     public boolean collisionOn = false;
+    Rectangle entityRect;
+    Rectangle objRect;
     Game gm;
 
     public Collision(Game gm){
         this.gm = gm;
+        entityRect = new Rectangle();
+        objRect = new Rectangle();
     }
 
     public void checkCollision(Entity entity){
@@ -67,32 +72,33 @@ public class Collision {
         for(int i = 0; i < gm.obj.length; i++){
 
             if(gm.obj[i] != null){
+                entityRect.width = entity.solidArea.width;
+                entityRect.height = entity.solidArea.height;
+                entityRect.x = entity.worldX + entity.solidArea.x;
+                entityRect.y = entity.worldY + entity.solidArea.y;
 
-                entity.solidArea.x = entity.worldX + entity.solidArea.x;
-                entity.solidArea.y = entity.worldY + entity.solidArea.y;
-
-                gm.obj[i].hitBox.x = gm.obj[i].worldX + gm.obj[i].hitBox.x;
-                gm.obj[i].hitBox.y = gm.obj[i].worldY + gm.obj[i].hitBox.y;
-
+                objRect.x = gm.obj[i].worldX + gm.obj[i].hitBox.x;
+                objRect.y = gm.obj[i].worldY + gm.obj[i].hitBox.y;
+                objRect.width = gm.obj[i].hitBox.width;
+                objRect.height = gm.obj[i].hitBox.height;
+                
                 switch(entity.direction){
                     case "up":
-                        entity.solidArea.y -= entity.speed;
-                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                        entityRect.y -= entity.speed;
+                        if(entityRect.intersects(objRect)){
                             if(gm.obj[i].collision){
-                                entity.collisionOn = true;
-                                System.out.println("Here");
+                                collisionOn = true;
                             }
                             if(player){
                                 index = i;
                             }
-                            System.out.println("here");
                         }
-                        break;  
+                        break;
                     case "down":
-                        entity.solidArea.y += entity.speed;
-                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                        entityRect.y += entity.speed;
+                        if(entityRect.intersects(objRect)){
                             if(gm.obj[i].collision){
-                                entity.collisionOn = true;
+                                collisionOn = true;
                             }
                             if(player){
                                 index = i;
@@ -100,10 +106,10 @@ public class Collision {
                         }
                         break;
                     case "left":
-                        entity.solidArea.x -= entity.speed;
-                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                        entityRect.x -= entity.speed;
+                        if(entityRect.intersects(objRect)){
                             if(gm.obj[i].collision){
-                                entity.collisionOn = true;
+                                collisionOn = true;
                             }
                             if(player){
                                 index = i;
@@ -111,10 +117,10 @@ public class Collision {
                         }
                         break;
                     case "right":
-                        entity.solidArea.x += entity.speed;
-                        if(entity.solidArea.intersects(gm.obj[i].hitBox)){
+                        entityRect.x += entity.speed;
+                        if(entityRect.intersects(objRect)){
                             if(gm.obj[i].collision){
-                                entity.collisionOn = true;
+                                collisionOn = true;
                             }
                             if(player){
                                 index = i;
@@ -122,13 +128,6 @@ public class Collision {
                         }
                         break;
                 }
-                //collisionOn = false;
-                entity.solidArea.x = entity.solidAreaDefaultX;
-                entity.solidArea.x = entity.solidAreaDefaultY;
-
-                gm.obj[i].hitBox.x = gm.obj[i].defaultX;
-                gm.obj[i].hitBox.y = gm.obj[i].defaultY;
-                
             }
         }
 

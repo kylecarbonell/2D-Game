@@ -13,9 +13,6 @@ public class Game extends JPanel implements Runnable{
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     int screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     int screenHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-    
-    // int screenWidth = 1600;
-    // int screenHeight = 900;
 
     JFrame window;
     Thread thread;
@@ -32,12 +29,22 @@ public class Game extends JPanel implements Runnable{
     int fps = 60;
 
     //System classes
-    KeyHandler keyHandler = new KeyHandler();
-    public Player player = new Player(this, keyHandler);
-    public Map map = new Map(this);
+    KeyHandler keyHandler = new KeyHandler(this);
     public Collision collision = new Collision(this);
+    public Map map = new Map(this);
+    public UI ui = new UI(this);
+
+    //Objects and players
+    public Player player = new Player(this, keyHandler);
     public Items obj[] = new Items[10]; 
     SetItems set = new SetItems(this);
+
+    //Game states
+    public int gamestate;
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int forestState = 3;
+    
 
     Game(){
         window = new JFrame();
@@ -64,7 +71,7 @@ public class Game extends JPanel implements Runnable{
 
     public void setUp(){
         set.instantiate();
-
+        gamestate = 1;
     }
 
     @Override
@@ -91,7 +98,12 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void update(){
-        player.update();
+        if(gamestate == playState){
+            player.update();
+        }
+        if(gamestate == pauseState){
+
+        }
     }
 
     
@@ -103,17 +115,25 @@ public class Game extends JPanel implements Runnable{
 
         Graphics2D g2 = (Graphics2D)g;
 
-        //Paint map
-        map.paint(g2);
-
-        //Paint world objects
-        for(int i = 0; i < obj.length; i++){
-            if(obj[i] != null){
-                obj[i].paint(g2);
-            }
+        if(gamestate == pauseState){
+            ui.paint(g2);
         }
-        //Paint main 
-        player.paint(g2);
+        else{
+            //TownMap
+            map.paint(g2);
+
+            //Paint world objects
+            for(int i = 0; i < obj.length; i++){
+                if(obj[i] != null){
+                    obj[i].paint(g2);
+                }
+            }
+            //Paint main 
+            player.paint(g2);
+            ui.paint(g2);
+        }
+        
+        
 
         g2.dispose();
     }

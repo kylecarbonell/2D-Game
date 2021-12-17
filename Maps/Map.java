@@ -67,6 +67,7 @@ public class Map extends Tile{
     }
 
     public void instantiateMap(){
+        //Create and instantiate 2 different maps
         try {
             Scanner scan = new Scanner(new File("Maps\\Map.txt"));
             while(scan.hasNextLine()){

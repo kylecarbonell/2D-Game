@@ -67,10 +67,12 @@ public class Player extends Entity{
     public void update(){
         if(keyHandler.up || keyHandler.down || keyHandler.left || keyHandler.right){
 
+            //Checks collections
             collisionOn = false;
             gm.collision.checkCollision(this);
-            //int index = gm.collision.checkObject(this, true);
-            
+            //Object Actions
+            int index = gm.collision.checkObject(this, true);
+            pickupObj(index);
 
             if(!collisionOn){
                 if(keyHandler.up && worldY >= 0){
@@ -91,8 +93,6 @@ public class Player extends Entity{
                 }
             }
 
-            
-            
             animationCounter++;
 
             if(animationCounter > 10){
@@ -145,5 +145,11 @@ public class Player extends Entity{
         g.drawImage(currentImage, screenX - gm.tileSize/2, screenY - gm.tileSize/2, gm.tileSize, gm.tileSize, null);
 
         g.dispose();
+    }
+
+    public void pickupObj(int index){
+        if(index == 0){
+            gm.obj[index] = null;
+        }
     }
 }

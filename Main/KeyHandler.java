@@ -5,10 +5,10 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener{
 
-    /*Game game;
-    public KeyHandler(Game game){
-        this.game = game;
-    }   */
+    Game gm;
+    public KeyHandler(Game gm){
+        this.gm = gm;
+    }   
 
     public boolean up;
     public boolean down;
@@ -45,6 +45,16 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_D){
             right = true;
             moving = true;
+        }
+
+        if(code == KeyEvent.VK_ESCAPE){
+            if(gm.gamestate == gm.playState){
+
+                gm.gamestate = gm.pauseState;
+            }
+            else if(gm.gamestate == gm.pauseState){
+                gm.gamestate = gm.playState;
+            }
         }
         
     }
