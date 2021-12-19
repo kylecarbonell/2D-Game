@@ -1,4 +1,5 @@
 package Maps;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,28 +9,19 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import Main.Game;
 
-public class Map extends Tile{
-    Game gm;
-    public File[] mapFiles = new File[2];
-    public int[][] layout;
-    public int[][] townLayout;
-    public int[][] forestLayout;
-    public Tile[] tiles;
-    File file;
+public class InstantiateTiles {
 
+    Game gm;
+    public Tile[] tiles;
+    
     int i = 0;
     int j = 0;
-
-    public Map(Game gm){
+    
+    public InstantiateTiles(Game gm){
         this.gm = gm;
-        layout = new int[gm.rows][gm.col];
-        townLayout= new int[gm.rows][gm.col];
-        forestLayout = new int[gm.rows][gm.col];
         tiles = new Tile[100];
         getImage();
-        instantiateMap();
     }
-
     public void getImage(){
         File grassFile = new File("Character Sprites\\Terrain\\GrassTile.png");
         File sandFile = new File("Character Sprites\\Terrain\\SandTile.png");
@@ -40,7 +32,7 @@ public class Map extends Tile{
         try {
             tiles[0] = new Tile();
             tiles[0].image = ImageIO.read(grassFile);
-            tiles[0].collision = true;
+            tiles[0].collision = false;
 
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(sandFile);
@@ -64,8 +56,6 @@ public class Map extends Tile{
             tiles[4].interactable = true;
             tiles[4].code = "Tree";
 
-            mapFiles[0] = new File("Maps\\Map.txt");
-            mapFiles[1] = new File("Maps\\Forest.txt");
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -74,16 +64,10 @@ public class Map extends Tile{
 
     }
 
-    public void instantiateMap(){
+    public void instantiateMap(int[][] layout, File file){
         //Create and instantiate 2 different maps
+        getImage();
         try {
-            for(File file : mapFiles){
-                if(file == mapFiles[0]){
-                    townLayout = layout;
-                }
-                else if(file == mapFiles[1]){
-                    forestLayout = layout;
-                }
                 Scanner scan = new Scanner(file);
                 while(scan.hasNextLine()){
                     String line = scan.nextLine();
@@ -98,22 +82,13 @@ public class Map extends Tile{
                     lineScan.close();
                 }
                 scan.close();
-            }
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
-    public void paint(Graphics2D g, int state){
-        int[][] temp = townLayout;
-        if(state == gm.forestState){
-            temp = forestLayout;
-        }
-        if(state == gm.playState){
-            temp = townLayout;
-        }
-
+    public void paint(Graphics2D g, int[][] layout){
         for(int i = 0; i < gm.maxWorldRow; i++){
             for(int j = 0; j < gm.maxWorldCol; j++){
 
@@ -127,7 +102,7 @@ public class Map extends Tile{
                     worldY + gm.tileSize> gm.player.worldY - gm.player.screenY &&
                     worldY - gm.tileSize < gm.player.worldY + gm.player.screenY){
 
-                    g.drawImage(tiles[temp[i][j]].image, screenX, screenY, gm.tileSize, gm.tileSize, null);
+                    g.drawImage(gm.tiles.tiles[layout[i][j]].image, screenX, screenY, gm.tileSize, gm.tileSize, null);
                 }
             }
         }

@@ -5,7 +5,9 @@ import javax.swing.*;
 import Entities.Player;
 import Items.Items;
 import Items.SetItems;
-import Maps.Map;
+import Maps.ForestMap;
+import Maps.InstantiateTiles;
+import Maps.TownMap;
 
 import java.awt.*;
 
@@ -30,18 +32,22 @@ public class Game extends JPanel implements Runnable{
 
     //System classes
     KeyHandler keyHandler = new KeyHandler(this);
+    public InstantiateTiles tiles = new InstantiateTiles(this);
     public Collision collision = new Collision(this);
-    public Map map = new Map(this);
     public UI ui = new UI(this);
+
+    public TownMap townMap = new TownMap(this);
+    public ForestMap forestMap = new ForestMap(this);
 
     //Objects and players
     public Player player = new Player(this, keyHandler);
     public Items obj[] = new Items[10]; 
     SetItems set = new SetItems(this);
+    
 
     //Game states
     public int gamestate;
-    public final int playState = 1;
+    public final int townState = 1;
     public final int pauseState = 2;
     public final int forestState = 3;
     
@@ -71,12 +77,11 @@ public class Game extends JPanel implements Runnable{
 
     public void setUp(){
         set.instantiate();
-        gamestate = 3;
+        gamestate = forestState;
     }
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         double nextDraw = 1000000000/fps;
         double delta = 0;
         long currentTime;
@@ -98,7 +103,7 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void update(){
-        if(gamestate == playState){
+        if(gamestate == townState){
             player.update();
         }
         if(gamestate == pauseState){
@@ -123,8 +128,14 @@ public class Game extends JPanel implements Runnable{
             ui.paint(g2);
         }
         else{
-            //TownMap
-            map.paint(g2, 3);
+            if(gamestate == townState){
+                //TownMap
+                townMap.paint(g2);
+            }
+            else if(gamestate == forestState){
+                forestMap.paint(g2);
+            }
+            
 
             //Paint world objects
             for(int i = 0; i < obj.length; i++){

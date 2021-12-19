@@ -30,37 +30,48 @@ public class Collision {
         int tile1;
         int tile2;
 
+        int[][] layout;
+        if(gm.gamestate == gm.townState){
+            layout = gm.townMap.townLayout;
+        }
+        else if(gm.gamestate == gm.forestState){
+            layout = gm.forestMap.forestLayout;
+        }
+        else {
+            layout = new int[10][10];
+        }
+
         switch(entity.direction){
             case "up":
                 topRow = (entityTop - entity.speed)/gm.tileSize;
-                tile1 = gm.map.layout[leftCol][topRow];
-                tile2 = gm.map.layout[rightCol][topRow];
+                tile1 = layout[leftCol][topRow];
+                tile2 = layout[rightCol][topRow];
                 //Check if Collision for that Block is on
-                if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
                 }
                 break;
             case "down":
                 botRow = (entityBottom + entity.speed)/gm.tileSize;
-                tile1 = gm.map.layout[leftCol][botRow];
-                tile2 = gm.map.layout[rightCol][botRow];
-                if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                tile1 = layout[leftCol][botRow];
+                tile2 = layout[rightCol][botRow];
+                if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
                 }
                 break;
             case "left":
                 leftCol = (entityLeft - entity.speed)/gm.tileSize;
-                tile1 = gm.map.layout[leftCol][topRow];
-                tile2 = gm.map.layout[leftCol][botRow];
-                if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                tile1 = layout[leftCol][topRow];
+                tile2 = layout[leftCol][botRow];
+                if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
                 }
                 break;
             case "right":
                 rightCol = (entityRight + entity.speed)/gm.tileSize;
-                tile1 = gm.map.layout[rightCol][topRow];
-                tile2 = gm.map.layout[rightCol][botRow];
-                if(gm.map.tiles[tile1].collision || gm.map.tiles[tile2].collision){
+                tile1 = layout[rightCol][topRow];
+                tile2 = layout[rightCol][botRow];
+                if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
                 }
                 break;

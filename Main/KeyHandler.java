@@ -48,12 +48,12 @@ public class KeyHandler implements KeyListener{
         }
 
         if(code == KeyEvent.VK_ESCAPE){
-            if(gm.gamestate == gm.playState){
+            if(gm.gamestate == gm.townState){
 
                 gm.gamestate = gm.forestState;
             }
             else if(gm.gamestate == gm.forestState){
-                gm.gamestate = gm.playState;
+                gm.gamestate = gm.townState;
             }
         }
         
