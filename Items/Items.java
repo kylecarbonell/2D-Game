@@ -13,6 +13,8 @@ public class Items {
     public int worldX;
     public int worldY;
 
+    public int gamestate;
+
     public Rectangle hitBox = new Rectangle(0, 0,64,64);
     public int defaultX = hitBox.x;
     public int defaultY = hitBox.y;
@@ -28,16 +30,19 @@ public class Items {
         this.gm = gm;
     }
 
-    public void paint(Graphics2D g2){
-        int screenX = worldX - gm.player.worldX + gm.player.screenX;
-        int screenY = worldY - gm.player.worldY + gm.player.screenY;
+    public void paint(Graphics2D g2, int gamestate){
+        if(gm.gamestate == gamestate){
 
-        if(worldX + gm.tileSize > gm.player.worldX - gm.player.screenX &&
-            worldX - gm.tileSize< gm.player.worldX + gm.player.screenX &&
-            worldY + gm.tileSize> gm.player.worldY - gm.player.screenY &&
-            worldY - gm.tileSize < gm.player.worldY + gm.player.screenY){
-            
-            g2.drawImage(objectImage, screenX, screenY, gm.tileSize, gm.tileSize, null);
+            int screenX = worldX - gm.player.worldX + gm.player.screenX;
+            int screenY = worldY - gm.player.worldY + gm.player.screenY;
+    
+            if(worldX + gm.tileSize > gm.player.worldX - gm.player.screenX &&
+                worldX - gm.tileSize< gm.player.worldX + gm.player.screenX &&
+                worldY + gm.tileSize> gm.player.worldY - gm.player.screenY &&
+                worldY - gm.tileSize < gm.player.worldY + gm.player.screenY){
+                
+                g2.drawImage(objectImage, screenX, screenY, gm.tileSize, gm.tileSize, null);
+            }
         }
     }
 

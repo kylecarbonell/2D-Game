@@ -18,6 +18,10 @@ public class UI {
         if(gm.gamestate == gm.pauseState){
             paintPause("PAUSED");
         }
+        else if(gm.gamestate == gm.loadingState){
+            paintLoading("LOADING...");
+            
+        }
     }
 
     public void paintPause(String text){
@@ -37,6 +41,18 @@ public class UI {
         g.setFont(new Font("MonoSpaced", Font.PLAIN, 30));
         g.setColor(Color.white);
         g.drawString(instruct, x+325, y+50);
+    }
+
+    public void paintLoading(String text){
+        int x = getCenterX(text);
+        int y =gm.screenHeight/2;
+        
+        g.setColor(Color.black);
+        g.fillRect(0,0,gm.screenWidth,gm.screenHeight);
+        //Main pause text
+        g.setFont(new Font("MonoSpaced", Font.PLAIN, 75));
+        g.setColor(Color.white);
+        g.drawString(text, x-100, y);
     }
 
     public int getCenterX(String text){

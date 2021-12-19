@@ -7,12 +7,14 @@ public class Collision {
     public boolean collisionOn = false;
     Rectangle entityRect;
     Rectangle objRect;
+    Rectangle eventRect;
     Game gm;
 
     public Collision(Game gm){
         this.gm = gm;
         entityRect = new Rectangle();
         objRect = new Rectangle();
+        eventRect = new Rectangle();
     }
 
     public void checkCollision(Entity entity){
@@ -142,6 +144,60 @@ public class Collision {
             }
         }
 
+        return index;
+    }
+
+    public int eventCollision(Entity entity, boolean player, int state){
+        int index = 999;
+        for(int i = 0; i < gm.events.length; i++){
+            if(gm.events[i] != null && gm.events[i].gamestate == state){
+
+                entityRect.width = entity.solidArea.width;
+                entityRect.height = entity.solidArea.height;
+                entityRect.x = entity.worldX + entity.solidArea.x;
+                entityRect.y = entity.worldY + entity.solidArea.y;
+    
+                eventRect.x = gm.events[i].worldX + gm.events[i].hitBox.x;
+                eventRect.y = gm.events[i].worldY + gm.events[i].hitBox.y;
+                eventRect.width = gm.events[i].hitBox.width;
+                eventRect.height = gm.events[i].hitBox.height;
+                
+                switch(entity.direction){
+                    case "up":
+                        entityRect.y -= entity.speed;
+                        if(entityRect.intersects(eventRect)){
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "down":
+                        entityRect.y += entity.speed;
+                        if(entityRect.intersects(eventRect)){
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "left":
+                        entityRect.x -= entity.speed;
+                        if(entityRect.intersects(eventRect)){
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "right":
+                        entityRect.x += entity.speed;
+                        if(entityRect.intersects(eventRect)){
+                            if(player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    }
+            }
+        }
         return index;
     }
 }

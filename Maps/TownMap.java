@@ -6,14 +6,13 @@ import Main.Game;
 
 public class TownMap extends Tile{
     Game gm;
-    public File[] mapFiles = new File[2];
     public int[][] townLayout;
 
     File file = new File("Maps\\TownMap.txt");
 
     public TownMap(Game gm){
         this.gm = gm;
-        townLayout= new int[gm.rows][gm.col];
+        townLayout = new int[gm.rows][gm.col];
         gm.tiles.instantiateMap(townLayout, file);
     }
 

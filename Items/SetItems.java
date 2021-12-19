@@ -10,7 +10,7 @@ public class SetItems {
     }
 
     public void instantiate(){
-        gm.obj[0] = new Key(gm, 24, 28, "Key1");
+        gm.obj[0] = new Key(gm, 24, 28, gm.townState, "Key1");
         
     }
 }

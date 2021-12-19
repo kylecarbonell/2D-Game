@@ -9,11 +9,12 @@ import Main.Game;
 
 public class Key extends Items{
 
-    public Key(Game gm, int worldX, int worldY, String name) {
+    public Key(Game gm, int worldX, int worldY, int gamestate, String name) {
         super(gm);
         this.worldX = worldX * gm.tileSize;
         this.worldY = worldY*gm.tileSize;
         this.name = name;
+        this.gamestate = gamestate;
         try {
             objectFile = new File("Character Sprites\\Items\\Key.png");
             objectImage = ImageIO.read(objectFile);

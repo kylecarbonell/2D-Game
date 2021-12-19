@@ -17,6 +17,9 @@ public class Player extends Entity{
     public final int screenX;
     public final int screenY;
 
+    int eventIndex;
+    int objIndex;
+
     public Player(Game gm, KeyHandler keyHandler){
         this.gm = gm;
         this.keyHandler = keyHandler;
@@ -70,9 +73,14 @@ public class Player extends Entity{
             //Checks collections
             collisionOn = false;
             gm.collision.checkCollision(this);
+
             //Object Actions
-            int index = gm.collision.checkObject(this, true);
-            pickupObj(index);
+            objIndex = gm.collision.checkObject(this, true);
+            switchItems();
+            
+            //Events
+            eventIndex = gm.collision.eventCollision(this, true, gm.gamestate);
+            switchEvents();
 
             if(!collisionOn){
                 if(keyHandler.up && worldY >= 0){
@@ -108,8 +116,6 @@ public class Player extends Entity{
         else{
             direction = "default";
         }
-        
-        
     }
     
     public void paint(Graphics2D g){
@@ -147,9 +153,25 @@ public class Player extends Entity{
         g.dispose();
     }
 
-    public void pickupObj(int index){
-        if(index == 0){
-            gm.obj[index] = null;
+    public void switchEvents(){
+        if(eventIndex == 0){
+            teleport();
         }
+    }
+
+    public void switchItems(){
+        if(objIndex == 0){
+            pickupObj();
+        }
+    }
+
+    public void pickupObj(){
+        gm.obj[objIndex] = null;
+    }
+
+    public void teleport(){
+        setValues();
+        gm.gamestate = gm.events[eventIndex].teleportState;
+        System.out.println(gm.gamestate);
     }
 }

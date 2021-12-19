@@ -14,14 +14,12 @@ public class InstantiateTiles {
     Game gm;
     public Tile[] tiles;
     
-    int i = 0;
-    int j = 0;
-    
     public InstantiateTiles(Game gm){
         this.gm = gm;
         tiles = new Tile[100];
         getImage();
     }
+
     public void getImage(){
         File grassFile = new File("Character Sprites\\Terrain\\GrassTile.png");
         File sandFile = new File("Character Sprites\\Terrain\\SandTile.png");
@@ -66,22 +64,23 @@ public class InstantiateTiles {
 
     public void instantiateMap(int[][] layout, File file){
         //Create and instantiate 2 different maps
-        getImage();
         try {
-                Scanner scan = new Scanner(file);
-                while(scan.hasNextLine()){
-                    String line = scan.nextLine();
-                    Scanner lineScan = new Scanner(line);
-    
-                    while(lineScan.hasNext()){
-                        layout[i][j] = Integer.valueOf(lineScan.next());
-                        i++;
-                    }
-                    i = 0;
-                    j++;
-                    lineScan.close();
+            int i = 0;
+            int j = 0;
+            Scanner scan = new Scanner(file);
+            while(scan.hasNextLine()){
+                String line = scan.nextLine();
+                Scanner lineScan = new Scanner(line);
+
+                while(lineScan.hasNext()){
+                    layout[i][j] = Integer.valueOf(lineScan.next());
+                    i++;
                 }
-                scan.close();
+                i = 0;
+                j++;
+                lineScan.close();
+            }
+            scan.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -3,6 +3,8 @@ package Main;
 import javax.swing.*;
 
 import Entities.Player;
+import Events.Events;
+import Events.SetEvents;
 import Items.Items;
 import Items.SetItems;
 import Maps.ForestMap;
@@ -42,14 +44,20 @@ public class Game extends JPanel implements Runnable{
     //Objects and players
     public Player player = new Player(this, keyHandler);
     public Items obj[] = new Items[10]; 
-    SetItems set = new SetItems(this);
+    SetItems setItems = new SetItems(this);
+
+    //Events
+    public Events[] events = new Events[10];
+    public SetEvents setEvents = new SetEvents(this);
     
 
     //Game states
     public int gamestate;
-    public final int townState = 1;
-    public final int pauseState = 2;
-    public final int forestState = 3;
+    public final int titleState = 0;
+    public final int pauseState = 1;
+    public final int loadingState = 2;
+    public final int townState = 3;
+    public final int forestState = 4;
     
 
     Game(){
@@ -76,8 +84,9 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void setUp(){
-        set.instantiate();
-        gamestate = forestState;
+        setItems.instantiate();
+        setEvents.instantiate();
+        gamestate = townState;
     }
 
     @Override
@@ -127,6 +136,9 @@ public class Game extends JPanel implements Runnable{
         if(gamestate == pauseState){
             ui.paint(g2);
         }
+        else if(gamestate == loadingState){
+            ui.paint(g2);
+        }
         else{
             if(gamestate == townState){
                 //TownMap
@@ -135,17 +147,18 @@ public class Game extends JPanel implements Runnable{
             else if(gamestate == forestState){
                 forestMap.paint(g2);
             }
-            
-
             //Paint world objects
             for(int i = 0; i < obj.length; i++){
-                if(obj[i] != null){
-                    obj[i].paint(g2);
+                if(obj[i] != null && obj[i].gamestate == gamestate){
+                    obj[i].paint(g2, gamestate);
                 }
             }
+            
             //Paint main 
             player.paint(g2);
             ui.paint(g2);
+
+            
         }
         
         

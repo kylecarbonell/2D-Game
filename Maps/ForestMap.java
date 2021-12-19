@@ -7,7 +7,6 @@ import Main.Game;
 public class ForestMap {
     
     Game gm;
-    public File[] mapFiles = new File[2];
     public int[][] forestLayout;
 
     File file = new File("Maps\\ForestMap.txt");
