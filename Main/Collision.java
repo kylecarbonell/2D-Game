@@ -2,6 +2,7 @@ package Main;
 
 import Entities.Entity;
 import java.awt.*;
+import java.util.Random;
 
 public class Collision {
     public boolean collisionOn = false;
@@ -17,7 +18,7 @@ public class Collision {
         eventRect = new Rectangle();
     }
 
-    public void checkCollision(Entity entity){
+    public void checkCollision(Entity entity, boolean player){
 
         int entityTop = entity.worldY + entity.solidArea.y;
         int entityBottom = entity.worldY + entity.solidArea.y + entity.solidArea.height;
@@ -52,6 +53,11 @@ public class Collision {
                 if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
                 }
+                if(player){
+                    if(gm.tiles.tiles[tile1].encounter || gm.tiles.tiles[tile2].encounter){
+                        entity.inEncounter = true;
+                    }
+                }
                 break;
             case "down":
                 botRow = (entityBottom + entity.speed)/gm.tileSize;
@@ -59,6 +65,11 @@ public class Collision {
                 tile2 = layout[rightCol][botRow];
                 if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
+                }
+                if(player){
+                    if(gm.tiles.tiles[tile1].encounter || gm.tiles.tiles[tile2].encounter){
+                        entity.inEncounter = true;
+                    }
                 }
                 break;
             case "left":
@@ -68,6 +79,11 @@ public class Collision {
                 if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
                 }
+                if(player){
+                    if(gm.tiles.tiles[tile1].encounter || gm.tiles.tiles[tile2].encounter){
+                        entity.inEncounter = true;
+                    }
+                }
                 break;
             case "right":
                 rightCol = (entityRight + entity.speed)/gm.tileSize;
@@ -75,6 +91,11 @@ public class Collision {
                 tile2 = layout[rightCol][botRow];
                 if(gm.tiles.tiles[tile1].collision || gm.tiles.tiles[tile2].collision){
                     entity.collisionOn = true;
+                }
+                if(player){
+                    if(gm.tiles.tiles[tile1].encounter || gm.tiles.tiles[tile2].encounter){
+                        entity.inEncounter = true;
+                    }
                 }
                 break;
         }

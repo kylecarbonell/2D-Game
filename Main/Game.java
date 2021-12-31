@@ -2,9 +2,12 @@ package Main;
 
 import javax.swing.*;
 
+import Battles.Battle;
 import Entities.Player;
 import Events.Events;
 import Events.SetEvents;
+import Fruit.SetFruit;
+import Fruit.Fruit;
 import Items.Items;
 import Items.SetItems;
 import Maps.ForestMap;
@@ -15,8 +18,8 @@ import java.awt.*;
 
 public class Game extends JPanel implements Runnable{
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    int screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-    int screenHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+    public int screenWidth = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+    public int screenHeight = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 
     JFrame window;
     Thread thread;
@@ -33,7 +36,7 @@ public class Game extends JPanel implements Runnable{
     int fps = 60;
 
     //System classes
-    KeyHandler keyHandler = new KeyHandler(this);
+    public KeyHandler keyHandler = new KeyHandler(this);
     public InstantiateTiles tiles = new InstantiateTiles(this);
     public Collision collision = new Collision(this);
     public UI ui = new UI(this);
@@ -41,16 +44,20 @@ public class Game extends JPanel implements Runnable{
     public TownMap townMap = new TownMap(this);
     public ForestMap forestMap = new ForestMap(this);
 
-    //Objects and players
-    public Player player = new Player(this, keyHandler);
-    public Items obj[] = new Items[10]; 
-    SetItems setItems = new SetItems(this);
-
     //Events
     public Events[] events = new Events[10];
     public SetEvents setEvents = new SetEvents(this);
     
-
+    //Pokemon Fruit
+    public Fruit[] fruits = new Fruit[10];
+    public SetFruit setFruit = new SetFruit(this);
+    public Battle battle = new Battle(this);
+    
+    //Objects and players
+    public Player player = new Player(this, keyHandler);
+    public Items obj[] = new Items[10]; 
+    SetItems setItems = new SetItems(this);
+    
     //Game states
     public int gamestate;
     public final int titleState = 0;
@@ -58,6 +65,8 @@ public class Game extends JPanel implements Runnable{
     public final int loadingState = 2;
     public final int townState = 3;
     public final int forestState = 4;
+    public final int battleMenuState = 5;
+    public final int battleSequenceState = 6;
     
 
     Game(){
@@ -74,8 +83,8 @@ public class Game extends JPanel implements Runnable{
         this.addKeyListener(keyHandler);
         this.setFocusable(true);
         window.add(this);
-        start();
         setUp();
+        start();
     }
 
     public void start(){
@@ -84,6 +93,7 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void setUp(){
+        setFruit.instantiate();
         setItems.instantiate();
         setEvents.instantiate();
         gamestate = townState;
@@ -121,11 +131,13 @@ public class Game extends JPanel implements Runnable{
         if(gamestate == forestState){
             player.update();
         }
+        if(gamestate == battleMenuState){
+
+        }
 
     }
 
     
-
     @Override
     protected void paintComponent(Graphics g) {
         // TODO Auto-generated method stub
@@ -138,6 +150,9 @@ public class Game extends JPanel implements Runnable{
         }
         else if(gamestate == loadingState){
             ui.paint(g2);
+        }   
+        else if(gamestate == battleMenuState){
+            battle.paint(g2);
         }
         else{
             if(gamestate == townState){

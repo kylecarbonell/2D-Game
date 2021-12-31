@@ -8,4 +8,5 @@ public class Tile {
     public boolean collision;
     public boolean interactable;
     public String code;
+    public boolean encounter = false;
 }

@@ -21,6 +21,7 @@ public class Entity {
     public int solidAreaDefaultX;
     public int solidAreaDefaultY;
     public boolean collisionOn = false;
+    public boolean inEncounter = false;
 
     //Images
     BufferedImage defaultImage = null;

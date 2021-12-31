@@ -1,15 +1,30 @@
 package Main;
 
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 public class UI {
 
     Game gm;
     Graphics2D g;
-    Font font;
+    public Font pixelFont;
+
+    public int battleStateChoice = 0;
 
     public UI(Game gm){
         this.gm = gm;
+
+        //InputStream is = getClass().getResourceAsStream("Fonts\\ARCADECLASSIC.TTF");
+        try {
+            pixelFont = Font.createFont(Font.TRUETYPE_FONT, new File("Fonts\\PressStart2P.ttf"));
+        } catch (FontFormatException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void paint(Graphics2D g){
@@ -20,8 +35,8 @@ public class UI {
         }
         else if(gm.gamestate == gm.loadingState){
             paintLoading("LOADING...");
-            
         }
+
     }
 
     public void paintPause(String text){
@@ -61,6 +76,5 @@ public class UI {
 
         return x;
     }
-
 
 }

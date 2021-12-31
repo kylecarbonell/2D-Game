@@ -6,13 +6,18 @@ import Main.KeyHandler;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
+
+import Fruit.Fruit;
 
 public class Player extends Entity{
 
     Game gm;
     KeyHandler keyHandler;
+
+    public Fruit[] party;
 
     public final int screenX;
     public final int screenY;
@@ -32,6 +37,7 @@ public class Player extends Entity{
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         
+        party = new Fruit[6];
 
         setValues();
         getImage();
@@ -72,7 +78,7 @@ public class Player extends Entity{
 
             //Checks collections
             collisionOn = false;
-            gm.collision.checkCollision(this);
+            gm.collision.checkCollision(this, true);
 
             //Object Actions
             objIndex = gm.collision.checkObject(this, true);
@@ -81,6 +87,9 @@ public class Player extends Entity{
             //Events
             eventIndex = gm.collision.eventCollision(this, true, gm.gamestate);
             switchEvents();
+
+            //Pokemon Encounter
+            encounter();
 
             if(!collisionOn){
                 if(keyHandler.up && worldY >= 0){
@@ -151,6 +160,18 @@ public class Player extends Entity{
         g.drawImage(currentImage, screenX - gm.tileSize/2, screenY - gm.tileSize/2, gm.tileSize, gm.tileSize, null);
 
         g.dispose();
+    }
+
+    public void encounter(){
+        if(inEncounter){
+            Random rand = new Random();
+            int randNum = rand.nextInt(200);
+            if(randNum == 1){
+                gm.gamestate = gm.battleMenuState;
+                randNum = rand.nextInt(3);
+                gm.battle.instantiateFruits(randNum);
+            }
+        }
     }
 
     public void switchEvents(){

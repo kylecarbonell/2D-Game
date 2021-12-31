@@ -21,38 +21,65 @@ public class InstantiateTiles {
     }
 
     public void getImage(){
-        File grassFile = new File("Character Sprites\\Terrain\\GrassTile.png");
-        File sandFile = new File("Character Sprites\\Terrain\\SandTile.png");
-        File stoneBrickFile = new File("Character Sprites\\Terrain\\StoneBrickTile.png");
-        File waterFile = new File("Character Sprites\\Terrain\\WaterTile.png");
-        File treeFile = new File("Character Sprites\\Terrain\\TreeTile.png");
+        //Sand paths corners
+        File botLeftSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Bot_LeftCorner.png");
+        File botRightSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Bot_RightCorner.png");
+        File topLeftSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Top_LeftCorner.png");
+        File topRightSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Top_RightCorner.png");
+        
+        //Sand paths straights
+        File topSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Top.png");
+        File botSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Bot.png");
+        File leftSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Left.png");
+        File rightSand = new File("Character Sprites\\Terrain\\Paths\\Sand_Path_Right.png");
 
+
+        File grassFile = new File("Character Sprites\\Terrain\\GrassTile.png");
+        File sandFile = new File("Character Sprites\\Terrain\\Paths\\Sand_Path.png");
+        
         try {
             tiles[0] = new Tile();
             tiles[0].image = ImageIO.read(grassFile);
             tiles[0].collision = false;
+            tiles[0].encounter = true;
 
+            //Sand Paths
             tiles[1] = new Tile();
             tiles[1].image = ImageIO.read(sandFile);
             tiles[1].collision = false;
 
             tiles[2] = new Tile();
-            tiles[2].image = ImageIO.read(stoneBrickFile);
-            tiles[2].collision = true;
-            tiles[2].interactable = true;
-            tiles[2].code = "Stone";
-
+            tiles[2].image = ImageIO.read(botLeftSand);
+            tiles[2].collision = false;
+            
             tiles[3] = new Tile();
-            tiles[3].image = ImageIO.read(waterFile);
-            tiles[3].collision = true;
-            tiles[3].interactable = true;
-            tiles[3].code = "Water";
-
+            tiles[3].image = ImageIO.read(botRightSand);
+            tiles[3].collision = false;
+            
             tiles[4] = new Tile();
-            tiles[4].image = ImageIO.read(treeFile);
-            tiles[4].collision = true;
-            tiles[4].interactable = true;
-            tiles[4].code = "Tree";
+            tiles[4].image = ImageIO.read(topRightSand);
+            tiles[4].collision = false;
+
+            tiles[5] = new Tile();
+            tiles[5].image = ImageIO.read(topLeftSand);
+            tiles[5].collision = false;
+
+            tiles[6] = new Tile();
+            tiles[6].image = ImageIO.read(topSand);
+            tiles[6].collision = false;
+
+            tiles[7] = new Tile();
+            tiles[7].image = ImageIO.read(leftSand);
+            tiles[7].collision = false;
+
+            tiles[8] = new Tile();
+            tiles[8].image = ImageIO.read(rightSand);
+            tiles[8].collision = false;
+
+            tiles[9] = new Tile();
+            tiles[9].image = ImageIO.read(botSand);
+            tiles[9].collision = false;
+            
 
 
         } catch (IOException e) {
