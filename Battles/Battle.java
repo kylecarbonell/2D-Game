@@ -37,7 +37,7 @@ public class Battle implements ActionListener {
     Graphics2D g;
 
     String text = "";
-    boolean pressEnter = false;
+    boolean pressEnter = true;
 
     double aiHealth;
 
@@ -47,7 +47,7 @@ public class Battle implements ActionListener {
     Timer animation;
     int animationCounter = 0;
 
-    public Stack<Integer> stack;
+    public Stack<String> stack;
 
     public Battle(Game gm){
         this.gm = gm;
@@ -59,13 +59,13 @@ public class Battle implements ActionListener {
         }
 
         animation = new Timer(100, this);
-        stack = new Stack<Integer>();
+        stack = new Stack<String>();
     }
 
     public void instantiateFruits(int i){
         player = new Fruit(gm.fruits[0]);
         ai = new Fruit(gm.fruits[2]);
-        stack.push(dialogueState);
+        state = dialogueState;
     }
 
     public void update(){
@@ -80,11 +80,8 @@ public class Battle implements ActionListener {
         entranceDialogue[0] = "You have encountered a wild " + ai.name;
         entranceDialogue[1] = "FIGHT!";
 
-        stack.push(dialogueState);
-        stack.push(dialogueState);
-        
-
-        
+        stack.push(entranceDialogue[1]);        
+        stack.push(entranceDialogue[0]);
     }
 
     public void checkHealth(){
@@ -142,9 +139,41 @@ public class Battle implements ActionListener {
         int height = gm.tileSize*5;
         
         paintBattle();
-        if(stack.peek() == dialogueState){
-            
+        if(!stack.isEmpty()){
+            if(state == dialogueState){
+                paintBattleMessage(stack.peek(), pressEnter);
+            }
         }
+        else{
+            state = sequenceState;
+        }
+
+        if(state == sequenceState){
+            playerUI();
+        }
+    }
+
+    public void paintBattle(){
+        int wordX = gm.screenWidth - gm.tileSize*7;
+        int wordY = 800;
+
+        //Temp Background
+        g.setColor(Color.gray);
+        g.fillRect(0, 0, gm.screenWidth, gm.screenHeight);
+        
+        
+        //Ai Oval
+        g.drawImage(background, 1125, 150, 600, 360, null);
+        
+        //Ai Character 1300 100
+        g.drawImage(ai.image, aiX, aiY, 250, 250, null);
+        g.drawString(ai.name, 700, 50);
+
+        //Ai Health Bar
+        g.setColor(Color.white);
+        g.drawRect(700, 100, 500, 50);
+
+        g.fillRect(700, 100, (int)aiHealth, 50);
     }
 
     public void playerUI(){
@@ -173,7 +202,7 @@ public class Battle implements ActionListener {
         g.setFont(g.getFont().deriveFont(Font.BOLD, 50));
         g.drawString("RUN", wordX, wordY+150);
 
-        if(gm.ui.battleStateChoice == 0){
+        if(choice == 0){
             //Fight choice
             g.drawString("X", wordX - 100, wordY);
         }
@@ -181,29 +210,6 @@ public class Battle implements ActionListener {
             //Run Choice
             g.drawString("X", wordX-100, wordY+150);
         }
-    }
-
-    public void paintBattle(){
-        int wordX = gm.screenWidth - gm.tileSize*7;
-        int wordY = 800;
-
-        //Temp Background
-        g.setColor(Color.gray);
-        g.fillRect(0, 0, gm.screenWidth, gm.screenHeight);
-        
-        
-        //Ai Oval
-        g.drawImage(background, 1125, 150, 600, 360, null);
-        
-        //Ai Character 1300 100
-        g.drawImage(ai.image, aiX, aiY, 250, 250, null);
-        g.drawString(ai.name, 700, 50);
-
-        //Ai Health Bar
-        g.setColor(Color.white);
-        g.drawRect(700, 100, 500, 50);
-
-        g.fillRect(700, 100, (int)aiHealth, 50);
     }
 
     public void paintBattleMessage(String text, boolean pressEnter){
@@ -220,6 +226,7 @@ public class Battle implements ActionListener {
         g.setFont(gm.ui.pixelFont);
         g.setFont(g.getFont().deriveFont(Font.BOLD, 30));
         g.drawString(text, 200, 800);
+        
     }
 
     @Override
@@ -228,15 +235,15 @@ public class Battle implements ActionListener {
         String action = e.getActionCommand();
 
         if(action.equals("EntranceText")){
-            if(pressEnter){
-                if(gm.keyHandler.enterPressed){
-                    System.out.println("Here");
+            if(gm.keyHandler.enterPressed){
+                if(!stack.isEmpty()){
                     stack.pop();
-                    animation.stop();
+                    gm.keyHandler.enterPressed = false; 
                 }
-            }
-            else{
-                animation.stop();
+                else{
+                    state = sequenceState;
+                    gm.keyHandler.enterPressed = false; 
+                }
             }
         }
 

@@ -32,42 +32,21 @@ public class KeyHandler implements KeyListener{
 
         int code = e.getKeyCode();
         if(gm.gamestate == gm.battleMenuState){
-            if(gm.battle.state == gm.battle.sequenceState){
-                if(code == KeyEvent.VK_W){
-                    gm.ui.battleStateChoice = 0;
-                }
-                if(code == KeyEvent.VK_S){
-                    gm.ui.battleStateChoice = 1;
-                }
-                if(code == KeyEvent.VK_SPACE){
-                    if(gm.ui.battleStateChoice == gm.battle.FIGHT){
-                        gm.battle.fight();
-                    }
-                    else if(gm.ui.battleStateChoice == gm.battle.RUN){
-                        gm.gamestate = gm.forestState;
-                    }
-                }
-            }
-            else if(gm.battle.stack.peek() == gm.battle.dialogueState){
+            if(gm.battle.state == gm.battle.dialogueState){
                 if(code == KeyEvent.VK_SPACE){
                     enterPressed = true;
                 }
             }
-            else if(gm.battle.state == gm.battle.entranceState){
-                if(code == KeyEvent.VK_SPACE){
-                    if(entered < gm.battle.entranceDialogue.length){
-                        entered++;
-                    }
+
+            if(gm.battle.state == gm.battle.sequenceState){
+                if(code == KeyEvent.VK_W){
+                    gm.battle.choice = 0;
                 }
-            }
-            else if(gm.battle.state == gm.battle.fightingState){
-                if(code == KeyEvent.VK_SPACE){
-                    fighting++;
+                if(code == KeyEvent.VK_S){
+                    gm.battle.choice = 1;
                 }
-            }
-            else if(gm.battle.state == gm.battle.healthState){
                 if(code == KeyEvent.VK_SPACE){
-                    gm.gamestate = gm.forestState;
+                    
                 }
             }
         }
@@ -94,9 +73,9 @@ public class KeyHandler implements KeyListener{
     
             if(code == KeyEvent.VK_ESCAPE){
                 if(gm.gamestate == gm.townState){
-                    gm.gamestate = gm.forestState;
+                    gm.gamestate = gm.pauseState;
                 }
-                else if(gm.gamestate == gm.forestState){
+                else if(gm.gamestate == gm.pauseState){
                     gm.gamestate = gm.townState;
                 }
             }
