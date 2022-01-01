@@ -48,7 +48,7 @@ public class KeyHandler implements KeyListener{
                     }
                 }
             }
-            else if(gm.battle.state == gm.battle.dialogueState){
+            else if(gm.battle.stack.peek() == gm.battle.dialogueState){
                 if(code == KeyEvent.VK_SPACE){
                     enterPressed = true;
                 }

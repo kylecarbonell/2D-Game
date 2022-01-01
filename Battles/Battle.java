@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Stack;
 import java.awt.event.*;
 
 import javax.imageio.ImageIO;
@@ -36,6 +37,7 @@ public class Battle implements ActionListener {
     Graphics2D g;
 
     String text = "";
+    boolean pressEnter = false;
 
     double aiHealth;
 
@@ -44,6 +46,8 @@ public class Battle implements ActionListener {
 
     Timer animation;
     int animationCounter = 0;
+
+    public Stack<Integer> stack;
 
     public Battle(Game gm){
         this.gm = gm;
@@ -55,52 +59,32 @@ public class Battle implements ActionListener {
         }
 
         animation = new Timer(100, this);
+        stack = new Stack<Integer>();
     }
 
     public void instantiateFruits(int i){
         player = new Fruit(gm.fruits[0]);
         ai = new Fruit(gm.fruits[2]);
-        state = entranceState;
+        stack.push(dialogueState);
     }
 
-    public void fightText(){
-        fightDialogue[0] = player.name + " used tackle";
-        fightDialogue[1] = ai.name + " took " + player.damage + " damage";
-        fightDialogue[2] = ai.name + " used tackle";
-        fightDialogue[3] = player.name +  " took " + ai.damage + " damage";
-
-        if(gm.keyHandler.fighting == 0){
-            text = fightDialogue[0];
-        }
-        else if(gm.keyHandler.fighting == 1){
-            text = fightDialogue[1];
-        }
-        else if(gm.keyHandler.fighting == 2){
-            text = fightDialogue[2];
-        }
-        else if(gm.keyHandler.fighting == 3){
-            text = fightDialogue[3];
-        }
-        else if(gm.keyHandler.fighting >= fightDialogue.length){
-            state = sequenceState;
-            gm.keyHandler.fighting = 0;
-        }
-        
+    public void update(){
+        enter();
     }
 
-    public void entrance(){
+    public void enter(){
+        animation.setActionCommand("EntranceText");
+        animation.setDelay(10);
+        animation.start();
+
         entranceDialogue[0] = "You have encountered a wild " + ai.name;
         entranceDialogue[1] = "FIGHT!";
-        if(gm.keyHandler.entered == 0){
-            text = entranceDialogue[0];
-        }
-        else if(gm.keyHandler.entered == 1){
-            text = entranceDialogue[1];
-        }
-        else if(gm.keyHandler.entered >= entranceDialogue.length){
-            state = sequenceState;
-            gm.keyHandler.entered = 0;
-        }
+
+        stack.push(dialogueState);
+        stack.push(dialogueState);
+        
+
+        
     }
 
     public void checkHealth(){
@@ -136,13 +120,17 @@ public class Battle implements ActionListener {
             second = player;
         }
 
-        if(first == ai){
+        animation.setActionCommand("Ai Attack");
+        attack(first, second);
+    }
+
+    public void attack(Fruit first, Fruit second){
             animation.start();
             second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
             checkHealth();
+            
             first.currentHealth -= second.damage - (int)(defenseMultiplier * first.defense);
             checkHealth();
-        }
     }
 
     public void paint(Graphics2D g){
@@ -154,23 +142,8 @@ public class Battle implements ActionListener {
         int height = gm.tileSize*5;
         
         paintBattle();
-        if(state == entranceState){
-            entrance();
-            paintBattleMessage(text);
-        }
-        else if(state == dialogueState){
-            paintBattleMessage(text);
-        }
-        else if(state == sequenceState){
-            playerUI();
-        }
-        else if(state == fightingState){
-            fightText();
-            paintBattleMessage(text);
-        }
-        else if(state == healthState){
-            checkHealth();
-            paintBattleMessage(text);
+        if(stack.peek() == dialogueState){
+            
         }
     }
 
@@ -230,12 +203,12 @@ public class Battle implements ActionListener {
         g.setColor(Color.white);
         g.drawRect(700, 100, 500, 50);
 
-        aiHealth = 500 * ((double)ai.currentHealth / ai.health);
         g.fillRect(700, 100, (int)aiHealth, 50);
     }
 
-    public void paintBattleMessage(String text){
+    public void paintBattleMessage(String text, boolean pressEnter){
         //Player UI Choice
+        state = dialogueState;
         g.setColor(Color.black);
         g.fillRoundRect(100, 700, gm.screenWidth - (gm.tileSize*4), gm.tileSize*5, 25, 25);
 
@@ -252,14 +225,33 @@ public class Battle implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
-        if(animationCounter == 0){
-            aiX -= 50;
-            animationCounter = 1;
+        String action = e.getActionCommand();
+
+        if(action.equals("EntranceText")){
+            if(pressEnter){
+                if(gm.keyHandler.enterPressed){
+                    System.out.println("Here");
+                    stack.pop();
+                    animation.stop();
+                }
+            }
+            else{
+                animation.stop();
+            }
         }
-        else{
-            aiX += 50;
-            animationCounter = 0;
-            animation.stop();
+
+
+
+        if(action.equals("Ai Attack")){
+            if(animationCounter == 0){
+                aiX -= 50;
+                animationCounter = 1;
+            }
+            else{
+                aiX += 50;
+                animationCounter = 0;
+                animation.stop();
+            }
         }
     }
     

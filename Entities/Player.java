@@ -170,6 +170,7 @@ public class Player extends Entity{
                 gm.gamestate = gm.battleMenuState;
                 randNum = rand.nextInt(3);
                 gm.battle.instantiateFruits(randNum);
+                gm.battle.update();
             }
         }
     }
