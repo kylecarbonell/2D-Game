@@ -17,7 +17,10 @@ public class Battle implements ActionListener {
     double defenseMultiplier = 0.2;
     public final int FIGHT = 0;
     public final int RUN = 1;
-    public int choice = 2;
+
+    public int choice = 0;
+    public int playerChoice;
+
     Fruit player;
     Fruit ai;
     public int state;
@@ -40,6 +43,7 @@ public class Battle implements ActionListener {
     boolean pressEnter = true;
 
     double aiHealth;
+    double aiMaxHealth;
 
     int aiX = 1300;
     int aiY = 100;
@@ -60,11 +64,15 @@ public class Battle implements ActionListener {
 
         animation = new Timer(100, this);
         stack = new Stack<String>();
+
+        
     }
 
     public void instantiateFruits(int i){
         player = new Fruit(gm.fruits[0]);
         ai = new Fruit(gm.fruits[2]);
+        aiMaxHealth = ai.health;
+        aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
         state = dialogueState;
     }
 
@@ -83,7 +91,7 @@ public class Battle implements ActionListener {
         stack.push(entranceDialogue[1]);        
         stack.push(entranceDialogue[0]);
     }
-
+    
     public void checkHealth(){
         state = healthState;
         if(ai.currentHealth <= 0){
@@ -123,6 +131,9 @@ public class Battle implements ActionListener {
 
     public void attack(Fruit first, Fruit second){
             animation.start();
+            animation.setDelay(10);
+
+            sleep(500);
             second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
             checkHealth();
             
@@ -154,13 +165,9 @@ public class Battle implements ActionListener {
     }
 
     public void paintBattle(){
-        int wordX = gm.screenWidth - gm.tileSize*7;
-        int wordY = 800;
-
         //Temp Background
         g.setColor(Color.gray);
         g.fillRect(0, 0, gm.screenWidth, gm.screenHeight);
-        
         
         //Ai Oval
         g.drawImage(background, 1125, 150, 600, 360, null);
@@ -173,6 +180,7 @@ public class Battle implements ActionListener {
         g.setColor(Color.white);
         g.drawRect(700, 100, 500, 50);
 
+        
         g.fillRect(700, 100, (int)aiHealth, 50);
     }
 
@@ -247,19 +255,31 @@ public class Battle implements ActionListener {
             }
         }
 
-
-
         if(action.equals("Ai Attack")){
+            //Pause
+            sleep(500);
+            
             if(animationCounter == 0){
                 aiX -= 50;
                 animationCounter = 1;
+
+                aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
             }
             else{
                 aiX += 50;
                 animationCounter = 0;
                 animation.stop();
             }
+
+
+            
         }
+    }
+
+    public void sleep(int time){
+        try { 
+            Thread.sleep(time); 
+        } catch (InterruptedException e1) {}
     }
     
 }

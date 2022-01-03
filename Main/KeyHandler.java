@@ -46,7 +46,12 @@ public class KeyHandler implements KeyListener{
                     gm.battle.choice = 1;
                 }
                 if(code == KeyEvent.VK_SPACE){
-                    
+                    if(gm.battle.choice == 1){
+                        gm.battle.run();
+                    }
+                    else if(gm.battle.choice == 0){
+                        gm.battle.fight();
+                    }
                 }
             }
         }
