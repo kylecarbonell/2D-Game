@@ -31,8 +31,6 @@ public class Battle implements ActionListener {
     public final int fightingState = 3;
     public final int healthState = 4;
 
-    public String[] entranceDialogue =  new String[2];
-    public String[] fightDialogue = new String[4];
     public String[] healthDialogue = new String[2];
 
     BufferedImage background = null;
@@ -50,8 +48,12 @@ public class Battle implements ActionListener {
 
     Timer animation;
     int animationCounter = 0;
-
+    boolean animationComplete = false;
+    
     public Stack<String> stack;
+
+    Fruit first;
+    Fruit second;
 
     public Battle(Game gm){
         this.gm = gm;
@@ -64,8 +66,6 @@ public class Battle implements ActionListener {
 
         animation = new Timer(100, this);
         stack = new Stack<String>();
-
-        
     }
 
     public void instantiateFruits(int i){
@@ -85,11 +85,8 @@ public class Battle implements ActionListener {
         animation.setDelay(10);
         animation.start();
 
-        entranceDialogue[0] = "You have encountered a wild " + ai.name;
-        entranceDialogue[1] = "FIGHT!";
-
-        stack.push(entranceDialogue[1]);        
-        stack.push(entranceDialogue[0]);
+        stack.push("You have encountered a wild " + ai.name);        
+        stack.push("FIGHT!");
     }
     
     public void checkHealth(){
@@ -114,8 +111,7 @@ public class Battle implements ActionListener {
 
     public void fight(){
         state = fightingState;
-        Fruit first;
-        Fruit second;
+        
         if(player.speed >= ai.speed){
             first = player;
             second = ai;
@@ -126,7 +122,7 @@ public class Battle implements ActionListener {
         }
 
         animation.setActionCommand("Ai Attack");
-        attack(first, second);
+        
     }
 
     public void attack(Fruit first, Fruit second){
@@ -180,7 +176,7 @@ public class Battle implements ActionListener {
         g.setColor(Color.white);
         g.drawRect(700, 100, 500, 50);
 
-        
+        //Inside HealthBar
         g.fillRect(700, 100, (int)aiHealth, 50);
     }
 
@@ -259,19 +255,26 @@ public class Battle implements ActionListener {
             //Pause
             sleep(500);
             
+            
             if(animationCounter == 0){
                 aiX -= 50;
                 animationCounter = 1;
-
+                
                 aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
             }
             else{
                 aiX += 50;
                 animationCounter = 0;
-                animation.stop();
+                animationComplete = true;
+                
             }
 
-
+            if(animationComplete){
+                attack(first, second);
+                System.out.println("Attacked");
+                animationComplete = false;
+                animation.stop();
+            }
             
         }
     }
