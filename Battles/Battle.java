@@ -31,11 +31,13 @@ public class Battle implements ActionListener {
     public final int fightingState = 3;
     public final int healthState = 4;
 
-    public String[] entranceDialogue =  new String[2];
-    public String[] fightDialogue = new String[4];
     public String[] healthDialogue = new String[2];
 
     BufferedImage background = null;
+    int x = 225;
+    int y = 550;
+    int width;
+    int height;
 
     Graphics2D g;
 
@@ -45,13 +47,17 @@ public class Battle implements ActionListener {
     double aiHealth;
     double aiMaxHealth;
 
-    int aiX = 1300;
-    int aiY = 100;
+    int aiX = 1000;
+    int aiY = 75;
 
     Timer animation;
     int animationCounter = 0;
-
+    boolean animationComplete = false;
+    
     public Stack<String> stack;
+
+    Fruit first;
+    Fruit second;
 
     public Battle(Game gm){
         this.gm = gm;
@@ -65,14 +71,15 @@ public class Battle implements ActionListener {
         animation = new Timer(100, this);
         stack = new Stack<String>();
 
-        
+        this.width = gm.screenWidth - (int)(gm.tileSize * 7);
+        this.height = (int)(gm.tileSize*3.5);
     }
 
     public void instantiateFruits(int i){
         player = new Fruit(gm.fruits[0]);
         ai = new Fruit(gm.fruits[2]);
         aiMaxHealth = ai.health;
-        aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
+        aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
         state = dialogueState;
     }
 
@@ -85,11 +92,8 @@ public class Battle implements ActionListener {
         animation.setDelay(10);
         animation.start();
 
-        entranceDialogue[0] = "You have encountered a wild " + ai.name;
-        entranceDialogue[1] = "FIGHT!";
-
-        stack.push(entranceDialogue[1]);        
-        stack.push(entranceDialogue[0]);
+        stack.push("You have encountered a wild " + ai.name);        
+        stack.push("FIGHT!");
     }
     
     public void checkHealth(){
@@ -114,8 +118,7 @@ public class Battle implements ActionListener {
 
     public void fight(){
         state = fightingState;
-        Fruit first;
-        Fruit second;
+        
         if(player.speed >= ai.speed){
             first = player;
             second = ai;
@@ -126,7 +129,7 @@ public class Battle implements ActionListener {
         }
 
         animation.setActionCommand("Ai Attack");
-        attack(first, second);
+        
     }
 
     public void attack(Fruit first, Fruit second){
@@ -143,11 +146,7 @@ public class Battle implements ActionListener {
 
     public void paint(Graphics2D g){
         this.g = g;
-        g.scale(0.75, 0.75);
-        int x = 100;
-        int y = 700;
-        int width = gm.screenWidth - (gm.tileSize*4);
-        int height = gm.tileSize*5;
+        //g.scale(0.75, 0.75);
         
         paintBattle();
         if(!stack.isEmpty()){
@@ -170,29 +169,25 @@ public class Battle implements ActionListener {
         g.fillRect(0, 0, gm.screenWidth, gm.screenHeight);
         
         //Ai Oval
-        g.drawImage(background, 1125, 150, 600, 360, null);
+        g.drawImage(background, 900, 150, 450, 270, null);
         
         //Ai Character 1300 100
-        g.drawImage(ai.image, aiX, aiY, 250, 250, null);
+        g.drawImage(ai.image, aiX, aiY, 225, 225, null);
         g.drawString(ai.name, 700, 50);
 
         //Ai Health Bar
         g.setColor(Color.white);
-        g.drawRect(700, 100, 500, 50);
+        g.drawRect(550, 100, 350, 35);
 
-        
-        g.fillRect(700, 100, (int)aiHealth, 50);
+        //Inside HealthBar
+        g.fillRect(550, 100, (int)aiHealth, 35);
     }
 
     public void playerUI(){
-        int x = 100;
-        int y = 700;
-        int width = gm.screenWidth - (gm.tileSize*4);
-        int height = gm.tileSize*5;
         int wordX = gm.screenWidth - gm.tileSize*7;
-        int wordY = 800;
-        //Player UI Choice
-        
+        int wordY = 625;
+       
+        //Player UI Choice 
         g.setColor(Color.black);
         g.fillRoundRect(x, y, width, height, 25, 25);
 
@@ -201,15 +196,14 @@ public class Battle implements ActionListener {
         g.setStroke(new BasicStroke(5));
         g.drawRoundRect(x + 5, y + 5, width-10, height-10, 25, 25);
         
-        //Fight
         g.setFont(gm.ui.pixelFont);
-        g.setFont(g.getFont().deriveFont(Font.BOLD, 50));
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 30));
+
+        //Fight
         g.drawString("FIGHT", wordX, wordY);
 
         //Run
-        g.setFont(gm.ui.pixelFont);
-        g.setFont(g.getFont().deriveFont(Font.BOLD, 50));
-        g.drawString("RUN", wordX, wordY+150);
+        g.drawString("RUN", wordX, wordY+100);
 
         if(choice == 0){
             //Fight choice
@@ -217,7 +211,7 @@ public class Battle implements ActionListener {
         }
         else{
             //Run Choice
-            g.drawString("X", wordX-100, wordY+150);
+            g.drawString("X", wordX-100, wordY+100);
         }
     }
 
@@ -225,16 +219,16 @@ public class Battle implements ActionListener {
         //Player UI Choice
         state = dialogueState;
         g.setColor(Color.black);
-        g.fillRoundRect(100, 700, gm.screenWidth - (gm.tileSize*4), gm.tileSize*5, 25, 25);
+        g.fillRoundRect(x, y, width, height, 25, 25);
 
         //Border
         g.setColor(Color.white);
         g.setStroke(new BasicStroke(5));
-        g.drawRoundRect(105, 705, gm.screenWidth - (gm.tileSize*4)-10, gm.tileSize*5-10, 25, 25);
+        g.drawRoundRect(x+5, y+5, width - 10, height-10, 25, 25);
 
         g.setFont(gm.ui.pixelFont);
-        g.setFont(g.getFont().deriveFont(Font.BOLD, 30));
-        g.drawString(text, 200, 800);
+        g.setFont(g.getFont().deriveFont(Font.BOLD, 20));
+        g.drawString(text, 275, 600);
         
     }
 
@@ -260,11 +254,25 @@ public class Battle implements ActionListener {
             //Pause
             sleep(500);
             
-            aiX -= 50;
-            sleep(300);
-            aiX += 50;
-            sleep(400);
-            aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
+            if(animationCounter == 0){
+                aiX -= 50;
+                animationCounter = 1;
+                
+                aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
+            }
+            else{
+                aiX += 50;
+                animationCounter = 0;
+                animationComplete = true;
+                
+            }
+
+            if(animationComplete){
+                attack(first, second);
+                System.out.println("Attacked");
+                animationComplete = false;
+                animation.stop();
+            }
         }
     }
 
