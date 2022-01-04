@@ -143,6 +143,7 @@ public class Game extends JPanel implements Runnable{
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g;
+        //g2.scale(0.75, 0.75);
 
         if(gamestate == pauseState){
             ui.paint(g2);

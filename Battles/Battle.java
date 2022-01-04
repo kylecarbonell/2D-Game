@@ -143,7 +143,7 @@ public class Battle implements ActionListener {
 
     public void paint(Graphics2D g){
         this.g = g;
-
+        g.scale(0.75, 0.75);
         int x = 100;
         int y = 700;
         int width = gm.screenWidth - (gm.tileSize*4);
@@ -192,6 +192,7 @@ public class Battle implements ActionListener {
         int wordX = gm.screenWidth - gm.tileSize*7;
         int wordY = 800;
         //Player UI Choice
+        
         g.setColor(Color.black);
         g.fillRoundRect(x, y, width, height, 25, 25);
 
@@ -259,20 +260,11 @@ public class Battle implements ActionListener {
             //Pause
             sleep(500);
             
-            if(animationCounter == 0){
-                aiX -= 50;
-                animationCounter = 1;
-
-                aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
-            }
-            else{
-                aiX += 50;
-                animationCounter = 0;
-                animation.stop();
-            }
-
-
-            
+            aiX -= 50;
+            sleep(300);
+            aiX += 50;
+            sleep(400);
+            aiHealth = 500 * (ai.currentHealth / aiMaxHealth);
         }
     }
 
