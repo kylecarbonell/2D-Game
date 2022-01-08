@@ -132,7 +132,7 @@ public class Game extends JPanel implements Runnable{
             player.update();
         }
         if(gamestate == battleMenuState){
-
+            
         }
     }
 

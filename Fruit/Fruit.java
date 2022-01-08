@@ -10,6 +10,11 @@ public class Fruit implements Cloneable{
     public BufferedImage image;
     public int currentHealth;
 
+    public boolean player = false;
+
+    public int x;
+    public int y;
+
     public int baseHealth;
     public int baseDamage;
     public int baseSpeed;
@@ -41,6 +46,13 @@ public class Fruit implements Cloneable{
         speed = baseSpeed + (level * 2);
         defense = baseDefense + (level * 4);
         currentHealth = health;
+        if(!player){
+            x = 1000;
+            y = 25;
+        }
+        else{
+            /*implement player cords*/
+        }
     }
     
     public void copy(Fruit x){

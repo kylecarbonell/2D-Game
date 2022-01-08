@@ -47,8 +47,7 @@ public class Battle implements ActionListener {
     double aiHealth;
     double aiMaxHealth;
 
-    int aiX = 1000;
-    int aiY = 75;
+    double playerHealth;
 
     Timer animation;
     int animationCounter = 0;
@@ -80,6 +79,7 @@ public class Battle implements ActionListener {
         ai = new Fruit(gm.fruits[2]);
         aiMaxHealth = ai.health;
         aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
+        playerHealth = 350 * (ai.currentHealth / aiMaxHealth);
         state = dialogueState;
     }
 
@@ -119,29 +119,43 @@ public class Battle implements ActionListener {
     public void fight(){
         state = fightingState;
         
-        if(player.speed >= ai.speed){
-            first = player;
-            second = ai;
-        }
-        else{
+        // if(player.speed >= ai.speed){
+        //     first = player;
+        //     second = ai;
+        // }
+        // else{
             first = ai;
             second = player;
-        }
+        // }
 
         animation.setActionCommand("Ai Attack");
-        
+        animation.start();
+        animation.setDelay(5);
     }
 
     public void attack(Fruit first, Fruit second){
-            animation.start();
-            animation.setDelay(10);
+        //Animate first attacker
+        first.x -= 50;
+        paint(g);
+        sleep(200);
+        first.x += 50;
+        paint(g);
+        
+        sleep(1000);
+        second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
+        aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
+        checkHealth();
+        
+        //Animate second attacker
+        second.x -= 50;
+        paint(g);
+        sleep(200);
+        second.x += 50;
+        paint(g);
 
-            sleep(500);
-            second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
-            checkHealth();
-            
-            first.currentHealth -= second.damage - (int)(defenseMultiplier * first.defense);
-            checkHealth();
+        sleep(1000);
+        first.currentHealth -= second.damage - (int)(defenseMultiplier * first.defense);
+        checkHealth();
     }
 
     public void paint(Graphics2D g){
@@ -169,18 +183,34 @@ public class Battle implements ActionListener {
         g.fillRect(0, 0, gm.screenWidth, gm.screenHeight);
         
         //Ai Oval
-        g.drawImage(background, 900, 150, 450, 270, null);
+        g.drawImage(background, 900, 100, 450, 270, null);
         
-        //Ai Character 1300 100
-        g.drawImage(ai.image, aiX, aiY, 225, 225, null);
+        //Ai Character
+        g.drawImage(ai.image, ai.x, ai.y, 225, 225, null);
         g.drawString(ai.name, 700, 50);
 
         //Ai Health Bar
         g.setColor(Color.white);
         g.drawRect(550, 100, 350, 35);
-
+        
         //Inside HealthBar
         g.fillRect(550, 100, (int)aiHealth, 35);
+
+        
+
+        //Player Oval
+        g.drawImage(background, 300, 350, 450, 270, null);
+
+        //Player Health Bar
+        g.setColor(Color.white);
+        g.drawRect(800, 350, 350, 35);
+
+        g.fillRect(800, 350, (int)playerHealth, 35);
+
+        //Player Experience Bar
+        g.setColor(Color.CYAN);
+        g.drawRect(800, 385, 350, 15);
+
     }
 
     public void playerUI(){
@@ -252,19 +282,18 @@ public class Battle implements ActionListener {
 
         if(action.equals("Ai Attack")){
             //Pause
-            sleep(500);
+            //sleep(500);
             
             if(animationCounter == 0){
-                aiX -= 50;
+                first.x -= 50;
                 animationCounter = 1;
                 
-                aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
+                //aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
             }
             else{
-                aiX += 50;
+                first.x += 50;
                 animationCounter = 0;
                 animationComplete = true;
-                
             }
 
             if(animationComplete){
