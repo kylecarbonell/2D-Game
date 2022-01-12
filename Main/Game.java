@@ -67,6 +67,7 @@ public class Game extends JPanel implements Runnable{
     public final int forestState = 4;
     public final int battleMenuState = 5;
     public final int battleSequenceState = 6;
+    public final int fruitState = 7;
     
 
     Game(){

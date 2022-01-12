@@ -75,11 +75,9 @@ public class Battle implements ActionListener {
     }
 
     public void instantiateFruits(int i){
-        player = new Fruit(gm.fruits[0]);
+        player = new Fruit(gm.fruits[2], true);
         ai = new Fruit(gm.fruits[2]);
-        aiMaxHealth = ai.health;
-        aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
-        playerHealth = 350 * (ai.currentHealth / aiMaxHealth);
+
         state = dialogueState;
     }
 
@@ -128,33 +126,27 @@ public class Battle implements ActionListener {
             second = player;
         // }
 
-        animation.setActionCommand("Ai Attack");
+        animation.setActionCommand("First Attack");
         animation.start();
         animation.setDelay(5);
+
+       
     }
 
     public void attack(Fruit first, Fruit second){
         //Animate first attacker
-        first.x -= 50;
-        paint(g);
-        sleep(200);
-        first.x += 50;
-        paint(g);
+        stack.push(first.name + " used tackle!");
         
-        sleep(1000);
+        sleep(500);
         second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
-        aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
+        second.setBarHealth();
+        paint(g);
         checkHealth();
-        
-        //Animate second attacker
-        second.x -= 50;
-        paint(g);
-        sleep(200);
-        second.x += 50;
-        paint(g);
 
-        sleep(1000);
+        //sleep(1000);
         first.currentHealth -= second.damage - (int)(defenseMultiplier * first.defense);
+        first.setBarHealth();
+        paint(g);
         checkHealth();
     }
 
@@ -164,9 +156,7 @@ public class Battle implements ActionListener {
         
         paintBattle();
         if(!stack.isEmpty()){
-            if(state == dialogueState){
-                paintBattleMessage(stack.peek(), pressEnter);
-            }
+            paintBattleMessage(stack.peek(), pressEnter);
         }
         else{
             state = sequenceState;
@@ -194,9 +184,7 @@ public class Battle implements ActionListener {
         g.drawRect(550, 100, 350, 35);
         
         //Inside HealthBar
-        g.fillRect(550, 100, (int)aiHealth, 35);
-
-        
+        g.fillRect(550, 100, (int)ai.barHealth, 35);
 
         //Player Oval
         g.drawImage(background, 300, 350, 450, 270, null);
@@ -205,12 +193,14 @@ public class Battle implements ActionListener {
         g.setColor(Color.white);
         g.drawRect(800, 350, 350, 35);
 
-        g.fillRect(800, 350, (int)playerHealth, 35);
+        g.fillRect(800, 350, (int)player.barHealth, 35);
 
         //Player Experience Bar
         g.setColor(Color.CYAN);
         g.drawRect(800, 385, 350, 15);
 
+        //Player model
+        g.drawImage(player.image, player.x, player.y, 225, 225, null);
     }
 
     public void playerUI(){
@@ -267,27 +257,14 @@ public class Battle implements ActionListener {
         // TODO Auto-generated method stub
         String action = e.getActionCommand();
 
-        if(action.equals("EntranceText")){
-            if(gm.keyHandler.enterPressed){
-                if(!stack.isEmpty()){
-                    stack.pop();
-                    gm.keyHandler.enterPressed = false; 
-                }
-                else{
-                    state = sequenceState;
-                    gm.keyHandler.enterPressed = false; 
-                }
-            }
-        }
-
-        if(action.equals("Ai Attack")){
+        if(action.equals("First Attack")){
             //Pause
             //sleep(500);
             
             if(animationCounter == 0){
                 first.x -= 50;
                 animationCounter = 1;
-                
+                sleep(200);
                 //aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
             }
             else{
@@ -298,6 +275,30 @@ public class Battle implements ActionListener {
 
             if(animationComplete){
                 attack(first, second);
+                System.out.println("Attacked");
+                animationComplete = false;
+                animation.stop();
+
+                animation.setActionCommand("Second Attack");
+                animation.start();
+            }
+        }
+
+        if(action.equals("Second Attack")){
+            if(animationCounter == 0){
+                second.x -= 50;
+                animationCounter = 1;
+                
+                //aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
+            }
+            else{
+                second.x += 50;
+                animationCounter = 0;
+                animationComplete = true;
+            }
+
+            if(animationComplete){
+                attack(second, first);
                 System.out.println("Attacked");
                 animationComplete = false;
                 animation.stop();

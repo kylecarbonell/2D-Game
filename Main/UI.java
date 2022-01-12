@@ -36,7 +36,19 @@ public class UI {
         else if(gm.gamestate == gm.loadingState){
             paintLoading("LOADING...");
         }
+        else if(gm.gamestate == gm.fruitState){
+            paintFruit();
+        }
 
+    }
+
+    public void paintFruit(){
+        System.out.println(gm.player.party.toString());
+        g.setColor(Color.black);
+        g.fillRect(0,0,gm.screenWidth,gm.screenHeight);
+        //Main pause text
+        g.setFont(new Font("MonoSpaced", Font.PLAIN, 75));
+        g.setColor(Color.white);
     }
 
     public void paintPause(String text){

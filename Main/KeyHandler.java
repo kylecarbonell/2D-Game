@@ -32,12 +32,7 @@ public class KeyHandler implements KeyListener{
 
         int code = e.getKeyCode();
         if(gm.gamestate == gm.battleMenuState){
-            if(gm.battle.state == gm.battle.dialogueState){
-                if(code == KeyEvent.VK_SPACE){
-                    enterPressed = true;
-                }
-            }
-
+            
             if(gm.battle.state == gm.battle.sequenceState){
                 if(code == KeyEvent.VK_W){
                     gm.battle.choice = 0;
@@ -52,6 +47,11 @@ public class KeyHandler implements KeyListener{
                     else if(gm.battle.choice == 0){
                         gm.battle.fight();
                     }
+                }
+            }
+            if(code == KeyEvent.VK_SPACE){
+                if(!gm.battle.stack.empty()){
+                    gm.battle.stack.pop();
                 }
             }
         }
@@ -74,6 +74,14 @@ public class KeyHandler implements KeyListener{
             if(code == KeyEvent.VK_D){
                 right = true;
                 moving = true;
+            }
+            if(code == KeyEvent.VK_E){
+                if(gm.gamestate == gm.townState){
+                    gm.gamestate = gm.fruitState;
+                }
+                else if(gm.gamestate == gm.fruitState){
+                    gm.gamestate = gm.townState;
+                }
             }
     
             if(code == KeyEvent.VK_ESCAPE){

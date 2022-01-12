@@ -32,11 +32,19 @@ public class Fruit implements Cloneable{
 
     public int attack;
 
-    public Fruit(){
+    public double barHealth;
+    public int maxHealth;
 
+    public Fruit(){
+        
     }
 
     public Fruit(Fruit fruit){
+        copy(fruit);
+    }
+
+    public Fruit(Fruit fruit, boolean player){
+        this.player = player;
         copy(fruit);
     }
 
@@ -51,7 +59,8 @@ public class Fruit implements Cloneable{
             y = 25;
         }
         else{
-            /*implement player cords*/
+            x = 400;
+            y = 275;
         }
     }
     
@@ -67,6 +76,15 @@ public class Fruit implements Cloneable{
         this.baseSpeed = x.baseSpeed;
         this.baseDefense = x.baseDefense;
         setStats();
+        setBarHealth();
+    }
+
+    public void setBarHealth(){
+        this.barHealth = 350 * (currentHealth / (double)health);
+    }
+
+    public String toString(){
+        return name;
     }
 
 }
