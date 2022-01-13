@@ -8,6 +8,8 @@ public class Fruit implements Cloneable{
     public int level = 1;
 
     public BufferedImage image;
+    public int width;
+    public int height;
     public int currentHealth;
 
     public boolean player = false;
@@ -59,8 +61,9 @@ public class Fruit implements Cloneable{
             y = 25;
         }
         else{
-            x = 400;
+            x = 650;
             y = 275;
+            flipImage();
         }
     }
     
@@ -71,16 +74,30 @@ public class Fruit implements Cloneable{
         this.image = x.image;
         
         this.baseHealth = x.baseHealth;
-        System.out.println(this.name + this.baseHealth);
         this.baseDamage = x.baseDamage;
         this.baseSpeed = x.baseSpeed;
         this.baseDefense = x.baseDefense;
+        this.width = 225;
+        this.height = 225;
         setStats();
         setBarHealth();
     }
 
     public void setBarHealth(){
         this.barHealth = 350 * (currentHealth / (double)health);
+    }
+
+    public void flipImage(){
+        width *= -1;
+    }
+
+    public void attack(){
+        if(player){
+            x += 50;
+        }
+        else{
+            x-= 50;
+        }
     }
 
     public String toString(){

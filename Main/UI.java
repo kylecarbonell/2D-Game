@@ -43,7 +43,6 @@ public class UI {
     }
 
     public void paintFruit(){
-        System.out.println(gm.player.party.toString());
         g.setColor(Color.black);
         g.fillRect(0,0,gm.screenWidth,gm.screenHeight);
         //Main pause text

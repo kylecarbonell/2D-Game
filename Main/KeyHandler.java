@@ -51,7 +51,7 @@ public class KeyHandler implements KeyListener{
             }
             if(code == KeyEvent.VK_SPACE){
                 if(!gm.battle.stack.empty()){
-                    gm.battle.stack.pop();
+                    gm.battle.stack.pop(); 
                 }
             }
         }
@@ -76,12 +76,11 @@ public class KeyHandler implements KeyListener{
                 moving = true;
             }
             if(code == KeyEvent.VK_E){
-                if(gm.gamestate == gm.townState){
-                    gm.gamestate = gm.fruitState;
-                }
-                else if(gm.gamestate == gm.fruitState){
+                if(gm.gamestate == gm.fruitState){
                     gm.gamestate = gm.townState;
+                    return;
                 }
+                gm.gamestate = gm.fruitState;
             }
     
             if(code == KeyEvent.VK_ESCAPE){
