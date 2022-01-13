@@ -15,6 +15,7 @@ import Maps.InstantiateTiles;
 import Maps.TownMap;
 
 import java.awt.*;
+import java.util.Stack;
 
 public class Game extends JPanel implements Runnable{
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -59,6 +60,7 @@ public class Game extends JPanel implements Runnable{
     SetItems setItems = new SetItems(this);
     
     //Game states
+    public Stack<Integer> stackState = new Stack<>(); 
     public int gamestate;
     public final int titleState = 0;
     public final int pauseState = 1;
@@ -97,7 +99,7 @@ public class Game extends JPanel implements Runnable{
         setFruit.instantiate();
         setItems.instantiate();
         setEvents.instantiate();
-        gamestate = townState;
+        stackState.push(townState);
     }
 
     @Override
@@ -123,6 +125,9 @@ public class Game extends JPanel implements Runnable{
     }
 
     public void update(){
+        gamestate = stackState.peek();
+        System.out.println(stackState);
+        System.out.println(stackState.peek());
         if(gamestate == townState){
             player.update();
         }
@@ -149,6 +154,9 @@ public class Game extends JPanel implements Runnable{
         if(gamestate == pauseState){
             ui.paint(g2);
         }
+        else if(gamestate == fruitState){
+            ui.paint(g2);
+        }
         else if(gamestate == loadingState){
             ui.paint(g2);
         }   
@@ -157,7 +165,6 @@ public class Game extends JPanel implements Runnable{
         }
         else{
             if(gamestate == townState){
-                //TownMap
                 townMap.paint(g2);
             }
             else if(gamestate == forestState){

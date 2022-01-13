@@ -58,6 +58,10 @@ public class Battle implements ActionListener {
     Fruit first;
     Fruit second;
 
+    
+    int tempFirst = 0;
+    int tempSecond = 0;
+
     public Battle(Game gm){
         this.gm = gm;
         state = 0;
@@ -75,7 +79,7 @@ public class Battle implements ActionListener {
     }
 
     public void instantiateFruits(int i){
-        player = new Fruit(gm.fruits[2], true);
+        player = gm.player.party[0];
         ai = new Fruit(gm.fruits[2]);
 
         state = dialogueState;
@@ -95,19 +99,18 @@ public class Battle implements ActionListener {
     }
     
     public void checkHealth(){
-        state = healthState;
+        // TODO implement get prev state
         if(ai.currentHealth <= 0){
             text = ai.name + " has fainted";
+            gm.stackState.pop();
             return;
         }
 
         if(player.currentHealth <= 0){
             text = player.name + " has fainted";
+            gm.stackState.pop();
             return;
         }
-
-        text = "FIGHT!";
-        state = fightingState;
     }
 
     public void run(){
@@ -117,35 +120,25 @@ public class Battle implements ActionListener {
     public void fight(){
         state = fightingState;
         
-        // if(player.speed >= ai.speed){
-        //     first = player;
-        //     second = ai;
-        // }
-        // else{
+        if(player.speed >= ai.speed){
+            first = player;
+            second = ai;
+        }
+        else{
             first = ai;
             second = player;
-        // }
+        }
 
         animation.setActionCommand("First Attack");
         animation.start();
-        animation.setDelay(5);
-
-       
+        animation.setDelay(10);
     }
 
     public void attack(Fruit first, Fruit second){
-        //Animate first attacker
-        stack.push(first.name + " used tackle!");
-        
+        //Animate first attacker        
         sleep(500);
         second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
         second.setBarHealth();
-        paint(g);
-        checkHealth();
-
-        //sleep(1000);
-        first.currentHealth -= second.damage - (int)(defenseMultiplier * first.defense);
-        first.setBarHealth();
         paint(g);
         checkHealth();
     }
@@ -156,7 +149,7 @@ public class Battle implements ActionListener {
         
         paintBattle();
         if(!stack.isEmpty()){
-            paintBattleMessage(stack.peek(), pressEnter);
+            paintBattleMessage(stack.peek());
         }
         else{
             state = sequenceState;
@@ -200,7 +193,7 @@ public class Battle implements ActionListener {
         g.drawRect(800, 385, 350, 15);
 
         //Player model
-        g.drawImage(player.image, player.x, player.y, 225, 225, null);
+        g.drawImage(player.image, player.x, player.y, -225, 225, null);
     }
 
     public void playerUI(){
@@ -235,9 +228,8 @@ public class Battle implements ActionListener {
         }
     }
 
-    public void paintBattleMessage(String text, boolean pressEnter){
+    public void paintBattleMessage(String text){
         //Player UI Choice
-        state = dialogueState;
         g.setColor(Color.black);
         g.fillRoundRect(x, y, width, height, 25, 25);
 
@@ -258,26 +250,24 @@ public class Battle implements ActionListener {
         String action = e.getActionCommand();
 
         if(action.equals("First Attack")){
-            //Pause
-            //sleep(500);
-            
             if(animationCounter == 0){
-                first.x -= 50;
+                tempFirst = first.x;
+                first.attack();
                 animationCounter = 1;
-                sleep(200);
-                //aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
             }
             else{
-                first.x += 50;
+                first.x = tempFirst;
                 animationCounter = 0;
                 animationComplete = true;
             }
 
             if(animationComplete){
+                checkHealth();
                 attack(first, second);
-                System.out.println("Attacked");
                 animationComplete = false;
                 animation.stop();
+
+                sleep(500);
 
                 animation.setActionCommand("Second Attack");
                 animation.start();
@@ -286,20 +276,19 @@ public class Battle implements ActionListener {
 
         if(action.equals("Second Attack")){
             if(animationCounter == 0){
-                second.x -= 50;
+                tempSecond = second.x;
+                second.attack();
                 animationCounter = 1;
-                
-                //aiHealth = 350 * (ai.currentHealth / aiMaxHealth);
             }
             else{
-                second.x += 50;
+                second.x = tempSecond;
                 animationCounter = 0;
                 animationComplete = true;
             }
 
             if(animationComplete){
+                checkHealth();
                 attack(second, first);
-                System.out.println("Attacked");
                 animationComplete = false;
                 animation.stop();
             }

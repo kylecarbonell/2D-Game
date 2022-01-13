@@ -48,6 +48,8 @@ public class Player extends Entity{
         worldX = gm.tileSize*23; 
         worldY = gm.tileSize*28;
         speed = 4;
+
+        
     }
 
     public void getImage(){
@@ -163,11 +165,14 @@ public class Player extends Entity{
     }
 
     public void encounter(){
+        //TODO: Change Implement Catch feature
+        party[0] = new Fruit(gm.fruits[2], true);
+
         if(inEncounter){
             Random rand = new Random();
             int randNum = rand.nextInt(200);
             if(randNum == 1){
-                gm.gamestate = gm.battleMenuState;
+                gm.stackState.push(gm.battleMenuState);
                 randNum = rand.nextInt(3);
                 gm.battle.instantiateFruits(randNum);
                 gm.battle.update();
