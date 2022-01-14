@@ -65,4 +65,14 @@ public class SetFruit {
         gm.fruits[3].baseSpeed = 20;
         gm.fruits[3].setStats();
     }
+
+    public Fruit getFruit(String name){
+        for(Fruit i : gm.fruits){
+            if(i.name.equals(name)){
+                return i;
+            }
+        }
+
+        return gm.fruits[0];
+    }
 }
