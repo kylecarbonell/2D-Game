@@ -50,7 +50,7 @@ public class Game extends JPanel implements Runnable{
     public SetEvents setEvents = new SetEvents(this);
     
     //Pokemon Fruit
-    public Fruit[] fruits = new Fruit[10];
+    public Fruit[] fruits = new Fruit[4];
     public SetFruit setFruit = new SetFruit(this);
     public Battle battle = new Battle(this);
     
@@ -99,6 +99,7 @@ public class Game extends JPanel implements Runnable{
         setFruit.instantiate();
         setItems.instantiate();
         setEvents.instantiate();
+        stackState.push(0);
         stackState.push(townState);
     }
 
@@ -126,8 +127,8 @@ public class Game extends JPanel implements Runnable{
 
     public void update(){
         gamestate = stackState.peek();
-        System.out.println(stackState);
-        System.out.println(stackState.peek());
+        //System.out.println(stackState);
+
         if(gamestate == townState){
             player.update();
         }

@@ -35,14 +35,23 @@ public class KeyHandler implements KeyListener{
             
             if(gm.battle.state == gm.battle.sequenceState){
                 if(code == KeyEvent.VK_W){
-                    gm.battle.choice = 0;
+                    gm.battle.choice--;
+                    if(gm.battle.choice < 0){
+                        gm.battle.choice = 2;
+                    }
                 }
                 if(code == KeyEvent.VK_S){
-                    gm.battle.choice = 1;
+                    gm.battle.choice++;
+                    if(gm.battle.choice > 2){
+                        gm.battle.choice = 0;
+                    }
                 }
                 if(code == KeyEvent.VK_SPACE){
-                    if(gm.battle.choice == 1){
+                    if(gm.battle.choice == 2){
                         gm.battle.run();
+                    }
+                    else if(gm.battle.choice == 1){
+
                     }
                     else if(gm.battle.choice == 0){
                         gm.battle.fight();

@@ -35,7 +35,6 @@ public class Fruit implements Cloneable{
     public int attack;
 
     public double barHealth;
-    public int maxHealth;
 
     public Fruit(){
         
@@ -50,6 +49,13 @@ public class Fruit implements Cloneable{
         copy(fruit);
     }
 
+    public Fruit(Fruit fruit, int level, int health){
+        copy(fruit);
+        this.currentHealth = health;
+        this.level = level; 
+        this.player = true;
+        
+    }
     public void setStats(){
         health = baseHealth + (level * 3);
         damage = baseDamage + (level * 5);

@@ -5,8 +5,12 @@ import Main.KeyHandler;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
@@ -25,6 +29,8 @@ public class Player extends Entity{
     int eventIndex;
     int objIndex;
 
+    File partyFile;
+
     public Player(Game gm, KeyHandler keyHandler){
         this.gm = gm;
         this.keyHandler = keyHandler;
@@ -39,6 +45,8 @@ public class Player extends Entity{
         
         party = new Fruit[6];
 
+        partyFile = new File("Entities\\PlayerParty.txt");
+
         setValues();
         getImage();
     }
@@ -47,9 +55,7 @@ public class Player extends Entity{
         //Spawn
         worldX = gm.tileSize*23; 
         worldY = gm.tileSize*28;
-        speed = 4;
-
-        
+        speed = 4;     
     }
 
     public void getImage(){
@@ -91,6 +97,8 @@ public class Player extends Entity{
             switchEvents();
 
             //Pokemon Encounter
+            //getParty();
+            //TEMPORARY
             encounter();
 
             if(!collisionOn){
@@ -164,9 +172,55 @@ public class Player extends Entity{
         g.dispose();
     }
 
+    public void saveParty(){
+        try {
+            FileWriter writer = new FileWriter(partyFile);
+
+            for(Fruit fruit : party){
+                writer.write(fruit.name);
+                writer.write(fruit.currentHealth);
+                writer.write(fruit.level);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+
+    public void getParty(){
+        try {
+            Scanner reader = new Scanner(partyFile);
+
+            int i = 0;
+
+            String name = "";
+            int health = 0;
+            int level = 0;
+
+            while(reader.hasNextLine()){
+                name = reader.nextLine();
+                health = Integer.valueOf(reader.nextInt());
+                level = Integer.valueOf(reader.nextInt());
+
+                System.out.println(name);
+                System.out.println(health);
+                System.out.println(level);
+
+                party[i] = new Fruit(gm.setFruit.getFruit(name), level, health);
+                System.out.println(party[i].name + "Health" + party[i].health + "");
+                i++;
+            }
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
+    }
+
     public void encounter(){
         //TODO: Change Implement Catch feature
-        party[0] = new Fruit(gm.fruits[2], true);
 
         if(inEncounter){
             Random rand = new Random();

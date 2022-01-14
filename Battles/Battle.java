@@ -79,6 +79,7 @@ public class Battle implements ActionListener {
     }
 
     public void instantiateFruits(int i){
+        gm.player.getParty();
         player = gm.player.party[0];
         ai = new Fruit(gm.fruits[2]);
 
@@ -100,17 +101,33 @@ public class Battle implements ActionListener {
     
     public void checkHealth(){
         // TODO implement get prev state
+
+        System.out.println(player.currentHealth);
         if(ai.currentHealth <= 0){
             text = ai.name + " has fainted";
             gm.stackState.pop();
+            System.out.println("Pop");
             return;
         }
 
         if(player.currentHealth <= 0){
             text = player.name + " has fainted";
+            System.out.println("Poop");
             gm.stackState.pop();
             return;
         }
+    }
+
+    public void catchFruit(){
+        for(int i = 0; i < gm.player.party.length; i++){
+            if(gm.player.party[i] == null){
+                gm.player.party[i] = new Fruit(ai, true);
+                break;
+            }
+        }
+
+        gm.player.saveParty();
+
     }
 
     public void run(){
@@ -218,9 +235,15 @@ public class Battle implements ActionListener {
         //Run
         g.drawString("RUN", wordX, wordY+100);
 
+        //Catch
+        g.drawString("CATCH", wordX, wordY+50);
+
         if(choice == 0){
             //Fight choice
             g.drawString("X", wordX - 100, wordY);
+        }
+        else if(choice == 1){
+            g.drawString("X", wordX - 100, wordY+50);
         }
         else{
             //Run Choice
