@@ -59,7 +59,7 @@ public class KeyHandler implements KeyListener{
                 }
             }
             if(code == KeyEvent.VK_SPACE){
-                if(!gm.battle.stack.empty()){
+                if(!gm.battle.stack.isEmpty()){
                     gm.battle.stack.pop(); 
                 }
             }

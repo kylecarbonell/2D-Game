@@ -18,6 +18,9 @@ public class Battle implements ActionListener {
     public final int FIGHT = 0;
     public final int RUN = 1;
 
+    boolean battleFinished;
+    boolean popped = false;
+
     public int choice = 0;
     public int playerChoice;
 
@@ -27,9 +30,6 @@ public class Battle implements ActionListener {
 
     public final int entranceState = 0;
     public final int sequenceState = 1;
-    public final int dialogueState = 2;
-    public final int fightingState = 3;
-    public final int healthState = 4;
 
     public String[] healthDialogue = new String[2];
 
@@ -44,11 +44,6 @@ public class Battle implements ActionListener {
     String text = "";
     boolean pressEnter = true;
 
-    double aiHealth;
-    double aiMaxHealth;
-
-    double playerHealth;
-
     Timer animation;
     int animationCounter = 0;
     boolean animationComplete = false;
@@ -58,7 +53,6 @@ public class Battle implements ActionListener {
     Fruit first;
     Fruit second;
 
-    
     int tempFirst = 0;
     int tempSecond = 0;
 
@@ -78,12 +72,30 @@ public class Battle implements ActionListener {
         this.height = (int)(gm.tileSize*3.5);
     }
 
+    public Battle(Game gm, int i){
+        this.gm = gm;
+        state = 0;
+        try {
+            background = ImageIO.read(new File("Character Sprites\\Fruits\\BattleBackground.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        animation = new Timer(100, this);
+        stack = new Stack<String>();
+
+        this.width = gm.screenWidth - (int)(gm.tileSize * 7);
+        this.height = (int)(gm.tileSize*3.5);
+        instantiateFruits(i);
+        update();
+
+    }
+
     public void instantiateFruits(int i){
-        gm.player.getParty();
+        gm.party.getFruit();
         player = gm.player.party[0];
         ai = new Fruit(gm.fruits[2]);
-
-        state = dialogueState;
+        popped = false;
     }
 
     public void update(){
@@ -91,31 +103,23 @@ public class Battle implements ActionListener {
     }
 
     public void enter(){
-        animation.setActionCommand("EntranceText");
-        animation.setDelay(10);
-        animation.start();
-
         stack.push("You have encountered a wild " + ai.name);        
         stack.push("FIGHT!");
     }
     
     public void checkHealth(){
-        // TODO implement get prev state
+        if(!popped){
+            if(ai.currentHealth <= 0){
+                battleFinished = true;
+                return;
+            }
+            else if(player.currentHealth <= 0){
+                battleFinished = true;
+                return;
+            }
 
-        System.out.println(player.currentHealth);
-        if(ai.currentHealth <= 0){
-            text = ai.name + " has fainted";
-            gm.stackState.pop();
-            System.out.println("Pop");
-            return;
         }
-
-        if(player.currentHealth <= 0){
-            text = player.name + " has fainted";
-            System.out.println("Poop");
-            gm.stackState.pop();
-            return;
-        }
+       
     }
 
     public void catchFruit(){
@@ -134,9 +138,7 @@ public class Battle implements ActionListener {
         gm.gamestate = gm.forestState;
     }
 
-    public void fight(){
-        state = fightingState;
-        
+    public void fight(){        
         if(player.speed >= ai.speed){
             first = player;
             second = ai;
@@ -162,8 +164,6 @@ public class Battle implements ActionListener {
 
     public void paint(Graphics2D g){
         this.g = g;
-        //g.scale(0.75, 0.75);
-        
         paintBattle();
         if(!stack.isEmpty()){
             paintBattleMessage(stack.peek());
@@ -174,6 +174,12 @@ public class Battle implements ActionListener {
 
         if(state == sequenceState){
             playerUI();
+        }
+
+        if(battleFinished && !popped){
+            animation.setActionCommand("Battle Finished");
+            animation.start();
+            battleFinished = false;
         }
     }
 
@@ -316,12 +322,29 @@ public class Battle implements ActionListener {
                 animation.stop();
             }
         }
+
+        if(action.equals("Battle Finished")){
+            if(!popped){
+                stack.push("You beat them");
+                popped = true;
+            }
+            if(stack.isEmpty() && popped){
+                gm.stackState.pop();
+                popped = false;
+                animation.stop();
+            }
+        }
     }
 
     public void sleep(int time){
         try { 
             Thread.sleep(time); 
         } catch (InterruptedException e1) {}
+    }
+
+    public void saveFruit(){
+        //Add EXP to player pokemon
+        
     }
     
 }

@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import Battles.Battle;
 import Entities.Player;
+import Entities.PlayerParty;
 import Events.Events;
 import Events.SetEvents;
 import Fruit.SetFruit;
@@ -56,6 +57,7 @@ public class Game extends JPanel implements Runnable{
     
     //Objects and players
     public Player player = new Player(this, keyHandler);
+    public PlayerParty party = new PlayerParty(this);
     public Items obj[] = new Items[10]; 
     SetItems setItems = new SetItems(this);
     

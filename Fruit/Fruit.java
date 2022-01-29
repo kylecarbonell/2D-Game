@@ -50,11 +50,10 @@ public class Fruit implements Cloneable{
     }
 
     public Fruit(Fruit fruit, int level, int health){
+        this.player = true;
         copy(fruit);
         this.currentHealth = health;
         this.level = level; 
-        this.player = true;
-        
     }
     public void setStats(){
         health = baseHealth + (level * 3);
@@ -67,9 +66,9 @@ public class Fruit implements Cloneable{
             y = 25;
         }
         else{
+            flipImage();
             x = 650;
             y = 275;
-            flipImage();
         }
     }
     

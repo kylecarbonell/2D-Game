@@ -14,6 +14,7 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
+import Battles.Battle;
 import Fruit.Fruit;
 
 public class Player extends Entity{
@@ -172,14 +173,16 @@ public class Player extends Entity{
         g.dispose();
     }
 
+    //Transitioning to SQL
     public void saveParty(){
         try {
             FileWriter writer = new FileWriter(partyFile);
 
             for(Fruit fruit : party){
-                writer.write(fruit.name);
-                writer.write(fruit.currentHealth);
-                writer.write(fruit.level);
+                String[] fruitStrings = {fruit.name, String.valueOf(fruit.currentHealth), String.valueOf(fruit.level)};
+                for(String i : fruitStrings){
+                    writer.append(i + " ");
+                }
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
@@ -199,26 +202,21 @@ public class Player extends Entity{
             int level = 0;
 
             while(reader.hasNextLine()){
-                name = reader.nextLine();
+                name = reader.nextLine().trim();
                 health = Integer.valueOf(reader.nextInt());
                 level = Integer.valueOf(reader.nextInt());
 
-                System.out.println(name);
-                System.out.println(health);
-                System.out.println(level);
-
                 party[i] = new Fruit(gm.setFruit.getFruit(name), level, health);
-                System.out.println(party[i].name + "Health" + party[i].health + "");
                 i++;
             }
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-
     }
+    //Finishing Transitioning to SQL
 
+    
     public void encounter(){
         //TODO: Change Implement Catch feature
 

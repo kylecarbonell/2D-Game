@@ -66,13 +66,14 @@ public class SetFruit {
         gm.fruits[3].setStats();
     }
 
-    public Fruit getFruit(String name){
+    public Fruit getFruit(String fruitName){
         for(Fruit i : gm.fruits){
-            if(i.name.equals(name)){
+            String name = i.name;
+            if(name.equals(fruitName)){
                 return i;
             }
         }
 
-        return gm.fruits[0];
+        return gm.fruits[2];
     }
 }
