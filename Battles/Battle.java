@@ -92,9 +92,8 @@ public class Battle implements ActionListener {
     }
 
     public void instantiateFruits(int i){
-        gm.party.getFruit();
         player = gm.player.party[0];
-        ai = new Fruit(gm.fruits[2]);
+        ai = new Fruit(gm.fruits[2], false);
         popped = false;
     }
 
@@ -111,15 +110,14 @@ public class Battle implements ActionListener {
         if(!popped){
             if(ai.currentHealth <= 0){
                 battleFinished = true;
+                System.out.println("Here");
                 return;
             }
             else if(player.currentHealth <= 0){
                 battleFinished = true;
                 return;
             }
-
         }
-       
     }
 
     public void catchFruit(){
@@ -135,7 +133,7 @@ public class Battle implements ActionListener {
     }
 
     public void run(){
-        gm.gamestate = gm.forestState;
+        gm.stackState.pop();
     }
 
     public void fight(){        
@@ -157,6 +155,7 @@ public class Battle implements ActionListener {
         //Animate first attacker        
         sleep(500);
         second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
+        System.out.println(first.damage);
         second.setBarHealth();
         paint(g);
         checkHealth();

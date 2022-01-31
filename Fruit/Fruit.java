@@ -11,8 +11,9 @@ public class Fruit implements Cloneable{
     public int width;
     public int height;
     public int currentHealth;
+    public int experience;
 
-    public boolean player = false;
+    public boolean player = true;
 
     public int x;
     public int y;
@@ -49,11 +50,12 @@ public class Fruit implements Cloneable{
         copy(fruit);
     }
 
-    public Fruit(Fruit fruit, int level, int health){
-        this.player = true;
+    public Fruit(Fruit fruit, int level, int health, int experience){
         copy(fruit);
         this.currentHealth = health;
         this.level = level; 
+        this.experience = experience;
+        System.out.println(name + level + currentHealth + experience);
     }
     public void setStats(){
         health = baseHealth + (level * 3);

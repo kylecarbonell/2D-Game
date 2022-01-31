@@ -101,6 +101,7 @@ public class Game extends JPanel implements Runnable{
         setFruit.instantiate();
         setItems.instantiate();
         setEvents.instantiate();
+        party.getFruit();
         stackState.push(0);
         stackState.push(townState);
     }

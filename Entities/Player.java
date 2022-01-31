@@ -44,7 +44,7 @@ public class Player extends Entity{
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         
-        party = new Fruit[6];
+        party = new Fruit[2];
 
         partyFile = new File("Entities\\PlayerParty.txt");
 
@@ -192,27 +192,7 @@ public class Player extends Entity{
     }
 
     public void getParty(){
-        try {
-            Scanner reader = new Scanner(partyFile);
-
-            int i = 0;
-
-            String name = "";
-            int health = 0;
-            int level = 0;
-
-            while(reader.hasNextLine()){
-                name = reader.nextLine().trim();
-                health = Integer.valueOf(reader.nextInt());
-                level = Integer.valueOf(reader.nextInt());
-
-                party[i] = new Fruit(gm.setFruit.getFruit(name), level, health);
-                i++;
-            }
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
     }
     //Finishing Transitioning to SQL
 

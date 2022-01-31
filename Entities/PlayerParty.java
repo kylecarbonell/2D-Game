@@ -17,13 +17,14 @@ public class PlayerParty {
     Game gm;
 
     public PlayerParty(Game gm){
+        this.gm = gm;
         loadDriver();
     }
 
     public void loadDriver(){
         //Creates a user specific database
-        String url = "jdbc:mysql://localhost:3306/Game";
-        String user = "root";
+        String url = "jdbc:mysql://localhost:3306/playerparty";
+        String user = "dazaichan";
         String password = "Lu2nglu2.";
         try {
             con = DriverManager.getConnection(url, user, password);
@@ -49,23 +50,38 @@ public class PlayerParty {
         }
     }
 
-    public Fruit getFruit(){
+    public void getFruit(){
         //FINISH THIS LATER
-        String getName = "SELECT name FROM party WHERE currentHealth > 0 LIMIT 1";
+        String getName = "SELECT * FROM party WHERE currentHealth > 0 LIMIT 1";
         String name = "";
+        int level = 0;
+        int health = 0;
+        int experience = 0;
+        int i = 1;
         try {
             Statement stmnt = con.createStatement();
             ResultSet result = stmnt.executeQuery(getName);
-            name = result.getString(0);
-            System.out.println(name);
-            return gm.setFruit.getFruit(name);
+            while(result.next()){
+                name = result.getString(i);
+                health = result.getInt(i+1);
+                experience = result.getInt(i+2);
+                level = result.getInt(i+3);
+
+                System.out.println(health);
+                
+                gm.player.party[i-1] = new Fruit(gm.setFruit.getFruit(name), level, health, experience);
+                //gm.player.party[i-1] = gm.setFruit.getFruit(name);
+                i++;
+            }
+
+            // for(Fruit fruit : gm.player.party){
+            //     System.out.println(fruit.name + fruit.currentHealth + fruit.experience);
+            // }
+            //return name;
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        gm.setFruit.getFruit(name);
-
-        return gm.fruits[0];
     }
 
 
