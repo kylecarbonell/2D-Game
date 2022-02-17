@@ -30,6 +30,7 @@ public class Battle implements ActionListener {
 
     public final int entranceState = 0;
     public final int sequenceState = 1;
+    public final int dialogueState = 2;
 
     public String[] healthDialogue = new String[2];
 
@@ -55,6 +56,8 @@ public class Battle implements ActionListener {
 
     int tempFirst = 0;
     int tempSecond = 0;
+
+    String endingText;
 
     public Battle(Game gm){
         this.gm = gm;
@@ -92,8 +95,9 @@ public class Battle implements ActionListener {
     }
 
     public void instantiateFruits(int i){
-        player = gm.player.party[0];
-        ai = new Fruit(gm.fruits[2], false);
+        player = gm.player.getParty();
+        ai = new Fruit(gm.fruits[i]);
+        endingText = "";
         popped = false;
     }
 
@@ -104,17 +108,19 @@ public class Battle implements ActionListener {
     public void enter(){
         stack.push("You have encountered a wild " + ai.name);        
         stack.push("FIGHT!");
+        System.out.println(stack);
     }
     
     public void checkHealth(){
         if(!popped){
             if(ai.currentHealth <= 0){
                 battleFinished = true;
-                System.out.println("Here");
+                endingText = ai.name + " has fainted! You Win!";
                 return;
             }
             else if(player.currentHealth <= 0){
                 battleFinished = true;
+                endingText = "Your " + player.name + " has fainted! You lose!"; 
                 return;
             }
         }
@@ -123,13 +129,17 @@ public class Battle implements ActionListener {
     public void catchFruit(){
         for(int i = 0; i < gm.player.party.length; i++){
             if(gm.player.party[i] == null){
-                gm.player.party[i] = new Fruit(ai, true);
+                gm.player.party[i] = new Fruit(ai);
+                gm.player.party[i].player = true;
+                
+                endingText = "You have caught " + ai.name;
+                battleFinished = true;
+                gm.party.addToParty(gm.player.party[i].getInfo(), i);
                 break;
             }
         }
-
-        gm.player.saveParty();
-
+        
+        stack.push("You have failed to catch " + ai.name);
     }
 
     public void run(){
@@ -155,7 +165,9 @@ public class Battle implements ActionListener {
         //Animate first attacker        
         sleep(500);
         second.currentHealth -= first.damage - (int)(defenseMultiplier * second.defense);
-        System.out.println(first.damage);
+        if(second.currentHealth < 0){
+            second.currentHealth = 0;
+        }
         second.setBarHealth();
         paint(g);
         checkHealth();
@@ -166,6 +178,7 @@ public class Battle implements ActionListener {
         paintBattle();
         if(!stack.isEmpty()){
             paintBattleMessage(stack.peek());
+            state = dialogueState;
         }
         else{
             state = sequenceState;
@@ -179,6 +192,7 @@ public class Battle implements ActionListener {
             animation.setActionCommand("Battle Finished");
             animation.start();
             battleFinished = false;
+            gm.party.updateParty();
         }
     }
 
@@ -213,6 +227,8 @@ public class Battle implements ActionListener {
         //Player Experience Bar
         g.setColor(Color.CYAN);
         g.drawRect(800, 385, 350, 15);
+
+        g.fillRect(800, 385, (int)player.experienceBar, 15);
 
         //Player model
         g.drawImage(player.image, player.x, player.y, -225, 225, null);
@@ -324,7 +340,7 @@ public class Battle implements ActionListener {
 
         if(action.equals("Battle Finished")){
             if(!popped){
-                stack.push("You beat them");
+                stack.push(endingText);
                 popped = true;
             }
             if(stack.isEmpty() && popped){

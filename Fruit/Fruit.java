@@ -5,12 +5,13 @@ import java.awt.image.*;
 public class Fruit implements Cloneable{
     public String name;
 
-    public int level = 1;
+    public int level;
 
     public BufferedImage image;
     public int width;
     public int height;
     public int currentHealth;
+    public int currentExperience;
     public int experience;
 
     public boolean player = true;
@@ -18,15 +19,16 @@ public class Fruit implements Cloneable{
     public int x;
     public int y;
 
-    public int baseHealth;
-    public int baseDamage;
-    public int baseSpeed;
-    public int baseDefense;
+    private int baseHealth;
+    private int baseDamage;
+    private int baseSpeed;
+    private int baseDefense;
+    private int baseExperience;
 
-    public int ivHealth;
-    public int ivDamage;
-    public int ivSpeed;
-    public int ivDefense;
+    private int ivHealth;
+    private int ivDamage;
+    private int ivSpeed;
+    private int ivDefense;
 
     public int health;
     public int damage;
@@ -36,33 +38,39 @@ public class Fruit implements Cloneable{
     public int attack;
 
     public double barHealth;
+    public double experienceBar;
 
-    public Fruit(){
-        
+    public Fruit(int baseDamage, int baseDefense, int baseHealth, int baseSpeed, int baseExperience){
+        this.baseDamage = baseDamage;
+        this.baseDefense = baseDefense;
+        this.baseHealth = baseHealth;
+        this.baseSpeed = baseSpeed;
+        this.baseExperience = baseExperience;
     }
 
     public Fruit(Fruit fruit){
+        this.player = false;
         copy(fruit);
     }
 
-    public Fruit(Fruit fruit, boolean player){
-        this.player = player;
+    public Fruit(Fruit fruit, int level, int currentHealth, int currentExperience){
         copy(fruit);
-    }
-
-    public Fruit(Fruit fruit, int level, int health, int experience){
-        copy(fruit);
-        this.currentHealth = health;
+        this.currentHealth = currentHealth;
         this.level = level; 
-        this.experience = experience;
-        System.out.println(name + level + currentHealth + experience);
+        this.currentExperience = experience;
+        setBarHealth();
     }
+
+
     public void setStats(){
         health = baseHealth + (level * 3);
         damage = baseDamage + (level * 5);
         speed = baseSpeed + (level * 2);
         defense = baseDefense + (level * 4);
         currentHealth = health;
+        experience = (int) Math.pow(5, level);
+        //System.out.println(level);
+        //System.out.println(experience);
         if(!player){
             x = 1000;
             y = 25;
@@ -76,6 +84,7 @@ public class Fruit implements Cloneable{
     
     public void copy(Fruit x){
         this.currentHealth = x.currentHealth;
+        this.currentExperience = x.currentExperience;
         this.name = x.name;
         this.level = x.level;
         this.image = x.image;
@@ -91,7 +100,8 @@ public class Fruit implements Cloneable{
     }
 
     public void setBarHealth(){
-        this.barHealth = 350 * (currentHealth / (double)health);
+        this.barHealth = 350 * (currentHealth/(double)health);
+        this.experienceBar = 350 * (currentExperience / (double)experience);
     }
 
     public void flipImage(){
@@ -105,6 +115,11 @@ public class Fruit implements Cloneable{
         else{
             x-= 50;
         }
+    }
+
+    public String[] getInfo(){
+        String[] temp = {name, String.valueOf(currentHealth), String.valueOf(experience), String.valueOf(level)};
+        return temp;
     }
 
     public String toString(){

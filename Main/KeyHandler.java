@@ -51,7 +51,7 @@ public class KeyHandler implements KeyListener{
                         gm.battle.run();
                     }
                     else if(gm.battle.choice == 1){
-
+                        gm.battle.catchFruit();
                     }
                     else if(gm.battle.choice == 0){
                         gm.battle.fight();

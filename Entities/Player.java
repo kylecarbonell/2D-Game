@@ -44,10 +44,11 @@ public class Player extends Entity{
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
         
-        party = new Fruit[2];
+        party = new Fruit[6];
 
         partyFile = new File("Entities\\PlayerParty.txt");
-
+        direction = "";
+        
         setValues();
         getImage();
     }
@@ -57,6 +58,7 @@ public class Player extends Entity{
         worldX = gm.tileSize*23; 
         worldY = gm.tileSize*28;
         speed = 4;     
+
     }
 
     public void getImage(){
@@ -173,28 +175,17 @@ public class Player extends Entity{
         g.dispose();
     }
 
-    //Transitioning to SQL
-    public void saveParty(){
-        try {
-            FileWriter writer = new FileWriter(partyFile);
-
-            for(Fruit fruit : party){
-                String[] fruitStrings = {fruit.name, String.valueOf(fruit.currentHealth), String.valueOf(fruit.level)};
-                for(String i : fruitStrings){
-                    writer.append(i + " ");
+    public Fruit getParty(){
+        for(Fruit i : party){
+            if(i != null){
+                if(i.currentHealth > 0){
+                    return i;
                 }
             }
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
         }
-        
-    }
 
-    public void getParty(){
-        
+        return party[0];
     }
-    //Finishing Transitioning to SQL
 
     
     public void encounter(){
@@ -205,7 +196,7 @@ public class Player extends Entity{
             int randNum = rand.nextInt(200);
             if(randNum == 1){
                 gm.stackState.push(gm.battleMenuState);
-                randNum = rand.nextInt(3);
+                randNum = rand.nextInt(gm.fruits.length);
                 gm.battle.instantiateFruits(randNum);
                 gm.battle.update();
             }
@@ -231,6 +222,5 @@ public class Player extends Entity{
     public void teleport(){
         setValues();
         gm.gamestate = gm.events[eventIndex].teleportState;
-        System.out.println(gm.gamestate);
     }
 }

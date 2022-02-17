@@ -34,11 +34,10 @@ public class PlayerParty {
         }
     }
 
-    public void saveParty(String[] info){
+    public void addToParty(String[] info, int id){
         String save = "INSERT INTO party VALUES (";
-        for(String i : info){
-            save += "'" + i + "'" + ", ";
-        }
+        save += "'" + info[0] + "', ";
+        save += info[1] + ", " + info[2] + ", "+ info[3] + ", " + id;
         save += ")";
 
         try {
@@ -52,7 +51,7 @@ public class PlayerParty {
 
     public void getFruit(){
         //FINISH THIS LATER
-        String getName = "SELECT * FROM party WHERE currentHealth > 0 LIMIT 1";
+        String getName = "SELECT * FROM party";
         String name = "";
         int level = 0;
         int health = 0;
@@ -62,26 +61,44 @@ public class PlayerParty {
             Statement stmnt = con.createStatement();
             ResultSet result = stmnt.executeQuery(getName);
             while(result.next()){
-                name = result.getString(i);
-                health = result.getInt(i+1);
-                experience = result.getInt(i+2);
-                level = result.getInt(i+3);
+                name = result.getString("name");
+                health = result.getInt("currentHealth");
+                experience = result.getInt("experience");
+                level = result.getInt("level");
 
                 System.out.println(health);
                 
                 gm.player.party[i-1] = new Fruit(gm.setFruit.getFruit(name), level, health, experience);
-                //gm.player.party[i-1] = gm.setFruit.getFruit(name);
                 i++;
             }
-
-            // for(Fruit fruit : gm.player.party){
-            //     System.out.println(fruit.name + fruit.currentHealth + fruit.experience);
-            // }
-            //return name;
         } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public void updateParty(){
+        String save;
+        String[] info = new String[3];
+
+        for(int i = 0; i < gm.player.party.length; i++){
+            if(gm.player.party[i] != null){
+                info = gm.player.party[i].getInfo();
+
+                save = "UPDATE party SET currentHealth = " + info[1] + ", experience = " + 
+                info[2] + ", level = " +  info[3] + " WHERE id = " + i;
+
+                try {
+                    Statement stmnt = con.createStatement();
+                    stmnt.execute(save);
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            } 
+        }
+
+        
     }
 
 

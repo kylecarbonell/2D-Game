@@ -130,8 +130,6 @@ public class Game extends JPanel implements Runnable{
 
     public void update(){
         gamestate = stackState.peek();
-        //System.out.println(stackState);
-
         if(gamestate == townState){
             player.update();
         }
